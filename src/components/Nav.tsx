@@ -5,7 +5,7 @@ import { Menu, X } from "lucide-react";
 type NavItem = { to: string; label: string };
 
 const ITEMS: NavItem[] = [
-  { to: "/fair", label: "사진 게시판" },
+  { to: "/fair", label: "릴레이 1인시위" },
   { to: "/report", label: "제보하기" },
 ];
 

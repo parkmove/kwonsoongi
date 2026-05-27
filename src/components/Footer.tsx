@@ -10,7 +10,7 @@ export default function Footer() {
               권순기
             </p>
             <p className="mt-3 text-base text-ink-400">
-              공식 웹사이트
+              경남교육감 후보 권순기를 검증합니다.
             </p>
           </div>
 

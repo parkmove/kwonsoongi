@@ -1,8 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  Download,
+  AlertTriangle,
+  Camera,
   ImagePlus,
   Loader2,
+  Megaphone,
   RotateCcw,
   Upload,
   X,
@@ -21,15 +23,18 @@ import {
   type FairPhoto,
 } from "../lib/supabase";
 
-const MAX_INPUT_BYTES = 12 * 1024 * 1024; // 원본 12MB
-const OUTPUT_EDGE = 1600; // 정방형 출력 한 변(px)
+const MAX_INPUT_BYTES = 12 * 1024 * 1024;
+const OUTPUT_EDGE = 1600;
 const OUTPUT_QUALITY = 0.85;
 
-/** 사용자의 크롭 영역(원본 좌표)을 받아 OUTPUT_EDGE × OUTPUT_EDGE webp로 만든다. */
-async function makeSquareWebp(
-  src: string,
-  crop: Area,
-): Promise<Blob> {
+const PICKET_PHRASES = [
+  "내 아이는 안 됩니다. 그 집 아이는 됩니까?",
+  "엄마 찬스로 서울대, 교육감은 안 됩니다",
+  "국가 예산 9억으로 만든 스펙, 공정합니까?",
+  "권순기는 검증 자료를 공개하라",
+];
+
+async function makeSquareWebp(src: string, crop: Area): Promise<Blob> {
   const img = await loadImage(src);
   const canvas = document.createElement("canvas");
   canvas.width = OUTPUT_EDGE;
@@ -96,24 +101,41 @@ export default function FairPage() {
   return (
     <>
       <Seo
-        title="사진 게시판"
-        description="함께한 순간을 나누는 공간."
+        title="릴레이 1인시위"
+        description="내가 경남 교육을 걱정합니다. 누구나, 어디서든."
         path="/fair"
       />
 
       {/* Hero */}
-      <section className="bg-ink-900 text-white">
-        <div className="mx-auto max-w-screen-xl px-5 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16 lg:px-8">
-          <p className="text-base font-bold text-magenta">
-            사진 게시판
+      <section className="relative isolate overflow-hidden bg-ink-900 text-ink-50">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute top-1/2 right-[-25vw] z-0 h-[80vw] w-[80vw] max-h-[800px] max-w-[800px] -translate-y-1/2 rounded-full opacity-25 blur-[120px]"
+          style={{
+            background: "radial-gradient(circle, #ff2d92 0%, transparent 60%)",
+          }}
+        />
+
+        <div className="relative z-10 mx-auto max-w-screen-xl px-5 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16 lg:px-8">
+          <p className="inline-flex items-center gap-2 text-base font-bold text-magenta">
+            <Megaphone className="h-4 w-4" />
+            릴레이 1인시위
           </p>
-          <h1 className="mt-3 text-4xl leading-[1.05] font-bold tracking-[-0.03em] sm:text-6xl">
-            함께한 순간을 나누세요.
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-white/75">
-            현장의 한 장면을 사진과 한 줄 제목으로 남겨 주세요. 검토 후
-            게시판에 공개됩니다.
+          <motion.h1
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-3 text-4xl leading-[1.05] font-bold tracking-[-0.03em] sm:text-6xl"
+          >
+            내가 경남 교육을
+            <br />
+            걱정합니다.
+          </motion.h1>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-200">
+            혼자여도 됩니다. 5분이어도 됩니다. A4 한 장이면 충분합니다.
+            권순기 후보가 도민의 질문에 대답할 수 있도록, 지금 함께해 주세요.
           </p>
+
           <div className="mt-8 flex flex-wrap gap-3">
             <button
               type="button"
@@ -121,96 +143,207 @@ export default function FairPage() {
               disabled={!SUPABASE_ENABLED}
               className="inline-flex items-center gap-2 rounded-full bg-magenta px-7 py-4 text-base font-bold tracking-[-0.01em] text-ink-900 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              <ImagePlus className="h-5 w-5" />
-              사진 올리기
+              <Camera className="h-5 w-5" />
+              인증샷 올리기
             </button>
-            {/* 피켓 다운로드 — URL 사용자가 채울 자리 */}
             <a
-              href="#"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border-2 border-white/40 px-7 py-4 text-base font-bold tracking-[-0.01em] text-white transition-colors hover:border-white hover:bg-white hover:text-ink-900"
+              href="#how"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-ink-200/40 px-7 py-4 text-base font-bold tracking-[-0.01em] text-ink-100 transition-colors hover:border-ink-200 hover:bg-ink-200 hover:text-ink-900"
             >
-              <Download className="h-5 w-5" />
-              피켓 다운로드
+              참여 방법 보기
             </a>
           </div>
         </div>
       </section>
 
-      {/* 갤러리 */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-screen-2xl px-5 py-16 sm:px-6 sm:py-24 lg:px-8">
-          {!SUPABASE_ENABLED && (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-base text-amber-900">
-              사진 게시판은 곧 열립니다. (관리자: Supabase 환경변수가 아직
-              설정되지 않았습니다.)
+      {/* 공직선거법 안내 */}
+      <section className="bg-ink-900">
+        <div className="mx-auto max-w-screen-xl px-5 sm:px-6 lg:px-8">
+          <div className="flex items-start gap-4 rounded-3xl border border-amber-500/30 bg-amber-500/[0.06] px-6 py-5 sm:px-8 sm:py-6">
+            <AlertTriangle
+              aria-hidden
+              className="mt-0.5 h-6 w-6 shrink-0 text-amber-300"
+            />
+            <div className="text-sm leading-relaxed text-amber-100/90 sm:text-base">
+              <p className="font-bold text-amber-200">공직선거법 안내</p>
+              <p className="mt-1">
+                공직선거법 제68조에 따라 <strong>선거기간 개시일 이후</strong>
+                , 누구든지 피켓·표지물을 들고 선거운동을 할 수 있습니다. 참여
+                전 관할 선거관리위원회에 사전 문의하시길 권장합니다.
+              </p>
             </div>
-          )}
+          </div>
+        </div>
+      </section>
 
-          {SUPABASE_ENABLED && loading && (
-            <div className="flex items-center gap-3 text-base text-ink-500">
-              <Loader2 className="h-5 w-5 animate-spin" />
-              사진을 불러오는 중…
-            </div>
-          )}
+      {/* 3단계 */}
+      <section id="how" className="bg-ink-900 scroll-mt-24">
+        <div className="mx-auto max-w-screen-xl px-5 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <p className="text-sm font-bold tracking-[0.08em] text-magenta uppercase">
+            How to
+          </p>
+          <h2 className="mt-2 text-3xl leading-tight font-bold tracking-[-0.025em] text-ink-50 sm:text-5xl">
+            세 단계면 충분합니다.
+          </h2>
 
-          {SUPABASE_ENABLED && !loading && photos.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-ink-200 bg-ink-50/40 p-12 text-center text-base text-ink-500">
-              아직 올라온 사진이 없습니다. 첫 사진의 주인공이 되어 주세요.
-            </div>
-          )}
-
-          {photos.length > 0 && (
-            <motion.ul
-              initial="hidden"
-              animate="show"
-              variants={{
-                hidden: {},
-                show: { transition: { staggerChildren: 0.04 } },
-              }}
-              className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-            >
-              {photos.map((p) => (
-                <motion.li
-                  key={p.id}
-                  variants={{
-                    hidden: { opacity: 0, y: 12 },
-                    show: { opacity: 1, y: 0 },
-                  }}
-                  className="group overflow-hidden rounded-2xl bg-ink-50"
-                >
-                  <a
-                    href={p.public_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block"
+          <ol className="mt-12 grid gap-6 md:grid-cols-3">
+            <li className="rounded-3xl border border-ink-700 bg-ink-800/40 p-7 sm:p-8">
+              <p className="text-sm font-bold text-magenta">STEP 01</p>
+              <h3 className="mt-2 text-2xl font-bold tracking-[-0.02em] text-ink-50">
+                피켓 만들기
+              </h3>
+              <p className="mt-3 text-base leading-relaxed text-ink-300">
+                A4 용지에 아래 문구 중 하나를 적습니다.
+                <span className="mt-1 block text-xs text-ink-500">
+                  각 면 25cm 이내 권장
+                </span>
+              </p>
+              <ul className="mt-5 space-y-2.5">
+                {PICKET_PHRASES.map((p) => (
+                  <li
+                    key={p}
+                    className="rounded-xl border border-magenta/20 bg-magenta/[0.06] px-4 py-3 text-sm leading-snug font-bold text-ink-50"
                   >
-                    <img
-                      src={p.public_url}
-                      alt={p.caption ?? `${p.author_name}님 사진`}
-                      loading="lazy"
-                      className="aspect-square h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                    />
-                  </a>
-                  <div className="space-y-1 px-4 py-3">
-                    <p className="line-clamp-2 text-sm leading-relaxed font-bold text-ink-900">
-                      {p.caption}
-                    </p>
-                    <p className="flex items-baseline justify-between gap-2 text-xs text-ink-400">
-                      <span>— {p.author_name}</span>
-                      <span>
-                        {new Date(p.created_at).toLocaleDateString("ko-KR", {
-                          month: "2-digit",
-                          day: "2-digit",
-                        })}
-                      </span>
-                    </p>
-                  </div>
-                </motion.li>
-              ))}
-            </motion.ul>
-          )}
+                    “{p}”
+                  </li>
+                ))}
+              </ul>
+            </li>
+
+            <li className="rounded-3xl border border-ink-700 bg-ink-800/40 p-7 sm:p-8">
+              <p className="text-sm font-bold text-magenta">STEP 02</p>
+              <h3 className="mt-2 text-2xl font-bold tracking-[-0.02em] text-ink-50">
+                사진 찍기
+              </h3>
+              <p className="mt-3 text-base leading-relaxed text-ink-300">
+                혼자 서 있는 모습을 찍습니다. 얼굴 공개는 선택입니다. 장소는
+                어디든 괜찮습니다.
+              </p>
+              <ul className="mt-5 space-y-2 text-sm text-ink-400">
+                <li>· 등 뒤에서 찍어도 됩니다.</li>
+                <li>· 마스크·모자도 좋습니다.</li>
+                <li>· 5분이면 충분합니다.</li>
+              </ul>
+            </li>
+
+            <li className="rounded-3xl border border-magenta/30 bg-magenta/[0.08] p-7 sm:p-8">
+              <p className="text-sm font-bold text-magenta">STEP 03</p>
+              <h3 className="mt-2 text-2xl font-bold tracking-[-0.02em] text-ink-50">
+                올리기
+              </h3>
+              <p className="mt-3 text-base leading-relaxed text-ink-200">
+                아래 버튼으로 업로드하면 운영자 검토 후 이 페이지에 게시됩니다.
+              </p>
+              <button
+                type="button"
+                onClick={() => setOpen(true)}
+                disabled={!SUPABASE_ENABLED}
+                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-magenta px-6 py-3.5 text-base font-bold text-ink-900 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <Camera className="h-5 w-5" />
+                인증샷 올리기
+              </button>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      {/* 갤러리 */}
+      <section className="bg-ink-50">
+        <div className="mx-auto max-w-screen-2xl px-5 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold tracking-[0.08em] text-magenta uppercase">
+                Wall of Voices
+              </p>
+              <h2 className="mt-2 text-3xl font-bold tracking-[-0.025em] text-ink-900 sm:text-5xl">
+                참여자 인증샷
+              </h2>
+            </div>
+            <p className="text-base text-ink-500">
+              {SUPABASE_ENABLED && !loading
+                ? `지금까지 ${photos.length}명이 참여했습니다.`
+                : "함께해 주신 분들의 기록"}
+            </p>
+          </div>
+
+          <div className="mt-10">
+            {!SUPABASE_ENABLED && (
+              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-base text-amber-900">
+                업로드 기능은 곧 열립니다. (관리자: Supabase 환경변수가 아직
+                설정되지 않았습니다.)
+              </div>
+            )}
+
+            {SUPABASE_ENABLED && loading && (
+              <div className="flex items-center gap-3 text-base text-ink-500">
+                <Loader2 className="h-5 w-5 animate-spin" />
+                인증샷을 불러오는 중…
+              </div>
+            )}
+
+            {SUPABASE_ENABLED && !loading && photos.length === 0 && (
+              <div className="rounded-3xl border border-dashed border-ink-300 bg-white p-12 text-center text-base text-ink-500">
+                <p className="font-bold text-ink-700">
+                  아직 올라온 인증샷이 없습니다.
+                </p>
+                <p className="mt-2">
+                  첫 번째 한 사람이 되어 주세요. 5분이면 충분합니다.
+                </p>
+              </div>
+            )}
+
+            {photos.length > 0 && (
+              <motion.ul
+                initial="hidden"
+                animate="show"
+                variants={{
+                  hidden: {},
+                  show: { transition: { staggerChildren: 0.04 } },
+                }}
+                className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
+              >
+                {photos.map((p) => (
+                  <motion.li
+                    key={p.id}
+                    variants={{
+                      hidden: { opacity: 0, y: 12 },
+                      show: { opacity: 1, y: 0 },
+                    }}
+                    className="group overflow-hidden rounded-2xl bg-white shadow-sm"
+                  >
+                    <a
+                      href={p.public_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block"
+                    >
+                      <img
+                        src={p.public_url}
+                        alt={p.caption ?? `${p.author_name}님 인증샷`}
+                        loading="lazy"
+                        className="aspect-square h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                      />
+                    </a>
+                    <div className="space-y-1 px-4 py-3">
+                      <p className="line-clamp-2 text-sm leading-relaxed font-bold text-ink-900">
+                        {p.caption}
+                      </p>
+                      <p className="flex items-baseline justify-between gap-2 text-xs text-ink-400">
+                        <span>— {p.author_name}</span>
+                        <span>
+                          {new Date(p.created_at).toLocaleDateString("ko-KR", {
+                            month: "2-digit",
+                            day: "2-digit",
+                          })}
+                        </span>
+                      </p>
+                    </div>
+                  </motion.li>
+                ))}
+              </motion.ul>
+            )}
+          </div>
         </div>
       </section>
 
@@ -226,10 +359,6 @@ export default function FairPage() {
     </>
   );
 }
-
-/* ============================================================== */
-/* 업로드 다이얼로그                                                */
-/* ============================================================== */
 
 function UploadDialog({
   onClose,
@@ -278,11 +407,11 @@ function UploadDialog({
       return;
     }
     if (!authorName.trim()) {
-      setError("이름을 적어 주세요.");
+      setError("지역·소개를 적어 주세요. (예: 창원 / 아이 둘 키우는 엄마)");
       return;
     }
     if (!caption.trim()) {
-      setError("사진 제목을 적어 주세요.");
+      setError("한 줄 메시지를 적어 주세요.");
       return;
     }
     if (TURNSTILE_ENABLED && !turnstileToken) {
@@ -334,8 +463,8 @@ function UploadDialog({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label="사진 올리기"
-      className="fixed inset-0 z-[60] flex items-end justify-center bg-ink-900/60 backdrop-blur-sm sm:items-center"
+      aria-label="인증샷 올리기"
+      className="fixed inset-0 z-[60] flex items-end justify-center bg-ink-900/70 backdrop-blur-sm sm:items-center"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -353,20 +482,19 @@ function UploadDialog({
         {done ? (
           <div className="py-12 text-center">
             <p className="text-2xl font-bold text-ink-900">
-              사진을 올려 주셔서 감사합니다.
+              참여해 주셔서 감사합니다.
             </p>
             <p className="mt-3 text-base text-ink-500">
-              운영자 검토 후 게시판에 공개됩니다.
+              운영자 검토 후 게시됩니다.
             </p>
           </div>
         ) : (
           <>
-            <p className="text-base font-bold text-magenta">사진 올리기</p>
+            <p className="text-base font-bold text-magenta">인증샷 올리기</p>
             <h2 className="mt-2 text-2xl font-bold tracking-[-0.025em] text-ink-900 sm:text-3xl">
-              함께한 한 장면을 보내 주세요.
+              한 사람의 5분이 모입니다.
             </h2>
 
-            {/* 파일 + 크롭 영역 */}
             <div className="mt-6">
               {src ? (
                 <div>
@@ -415,9 +543,7 @@ function UploadDialog({
                   className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-ink-200 bg-ink-50/50 text-ink-500 transition-colors hover:border-ink-300 hover:bg-ink-50"
                 >
                   <ImagePlus className="h-8 w-8" />
-                  <span className="text-base font-bold">
-                    탭하여 사진 선택
-                  </span>
+                  <span className="text-base font-bold">탭하여 사진 선택</span>
                   <span className="text-sm">
                     최대 12MB · 자동으로 정사각으로 잘려요
                   </span>
@@ -433,25 +559,23 @@ function UploadDialog({
               />
             </div>
 
-            {/* 이름 (필수) */}
             <label className="mt-6 block">
               <span className="text-sm font-bold text-ink-700">
-                이름 <span className="text-red-500">*</span>
+                지역 · 소개 <span className="text-red-500">*</span>
               </span>
               <input
                 type="text"
                 value={authorName}
-                onChange={(e) => setAuthorName(e.target.value.slice(0, 24))}
+                onChange={(e) => setAuthorName(e.target.value.slice(0, 36))}
                 required
-                placeholder="공개될 이름을 적어 주세요"
+                placeholder="예) 창원 / 아이 둘 키우는 엄마"
                 className="mt-2 w-full rounded-2xl border border-ink-200 bg-white px-4 py-3 text-base text-ink-900 placeholder-ink-300 focus:border-ink-400 focus:outline-none"
               />
             </label>
 
-            {/* 사진 제목 (필수) */}
             <label className="mt-4 block">
               <span className="text-sm font-bold text-ink-700">
-                사진 제목 <span className="text-red-500">*</span>
+                한 줄 메시지 <span className="text-red-500">*</span>
               </span>
               <textarea
                 value={caption}
@@ -459,7 +583,7 @@ function UploadDialog({
                 maxLength={120}
                 rows={2}
                 required
-                placeholder="사진에 어울리는 한 줄을 적어 주세요."
+                placeholder="피켓에 적은 문장 또는 한 줄 다짐을 적어 주세요."
                 className="mt-2 w-full resize-none rounded-2xl border border-ink-200 bg-white px-4 py-3 text-base text-ink-900 placeholder-ink-300 focus:border-ink-400 focus:outline-none"
               />
               <span className="mt-1 block text-right text-xs text-ink-400">
@@ -467,7 +591,6 @@ function UploadDialog({
               </span>
             </label>
 
-            {/* Turnstile */}
             {TURNSTILE_ENABLED ? (
               <div className="mt-5">
                 <Turnstile
