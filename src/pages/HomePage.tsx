@@ -163,13 +163,28 @@ export default function HomePage() {
       />
 
       <Hero />
-      <SectionDivider label="평범한 사람들은 알 수 없는 세계" num="01" />
+      <SectionDivider
+        label="평범한 사람들은 알 수 없는 세계"
+        num="01"
+        image="/assets/photo/lab.jpg"
+        imagePosition="center 35%"
+      />
       <PeopleSection />
       <PrimerSection />
-      <SectionDivider label="2009~2011, 3년간 있었던 일" num="02" tone="alt" />
+      <SectionDivider
+        label="2009~2011, 3년간 있었던 일"
+        num="02"
+        tone="alt"
+        image="/assets/photo/clock.jpg"
+      />
       <TimelineSection />
       <SummaryBanner />
-      <SectionDivider label="이게 왜 문제입니까" num="03" />
+      <SectionDivider
+        label="이게 왜 문제입니까"
+        num="03"
+        image="/assets/photo/scales.jpg"
+        imagePosition="center 40%"
+      />
       <ProblemSection />
       <SectionDivider label="권순기의 말, 그리고 사실" num="04" tone="alt" />
       <StatementSection />
@@ -194,14 +209,14 @@ function Hero() {
         aria-hidden
         className="pointer-events-none absolute inset-0 z-0"
         style={{
-          backgroundImage: "url(/assets/photo/snu-gate.jpg)",
+          backgroundImage: "url(/assets/photo/snu-gate-night.jpg)",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
       />
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-ink-950/80 via-ink-950/92 to-ink-950"
+        className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-ink-950/70 via-ink-950/88 to-ink-950"
       />
       <div
         aria-hidden
@@ -304,12 +319,53 @@ function SectionDivider({
   label,
   num,
   tone = "main",
+  image,
+  imagePosition = "center",
 }: {
   label: string;
   num: string;
   tone?: "main" | "alt";
+  image?: string;
+  imagePosition?: string;
 }) {
   const bg = tone === "alt" ? "bg-ink-950" : "bg-ink-900";
+
+  if (image) {
+    return (
+      <div className="relative isolate overflow-hidden border-y border-magenta/20">
+        <div
+          aria-hidden
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url(${image})`,
+            backgroundSize: "cover",
+            backgroundPosition: imagePosition,
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 z-0 bg-gradient-to-r from-ink-950/95 via-ink-950/80 to-ink-950/40"
+        />
+        <div className="relative z-10 mx-auto flex max-w-screen-xl items-center justify-between gap-6 px-5 py-12 sm:px-6 sm:py-16 lg:px-8">
+          <div className="flex items-center gap-5">
+            <span className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-magenta text-base font-black tracking-[-0.02em] text-ink-900 sm:h-12 sm:w-12 sm:text-lg">
+              {num}
+            </span>
+            <p className="text-xl leading-tight font-bold tracking-[-0.02em] text-ink-50 sm:text-3xl">
+              {label}
+            </p>
+          </div>
+          <span
+            aria-hidden
+            className="hidden text-xs tracking-[0.16em] text-ink-300 uppercase sm:inline-block"
+          >
+            / Section
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className={`${bg} border-y border-magenta/15`}>
       <div className="mx-auto flex max-w-screen-xl items-center justify-between gap-6 px-5 py-6 sm:px-6 sm:py-7 lg:px-8">
@@ -983,10 +1039,27 @@ function RepetitionSection() {
 
 function CtaSection() {
   return (
-    <section className="relative isolate overflow-hidden border-y border-ink-800 bg-magenta">
+    <section className="relative isolate overflow-hidden border-y border-ink-800 bg-ink-950">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.15] mix-blend-multiply"
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage: "url(/assets/photo/protest.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center 30%",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 bg-magenta/80 mix-blend-multiply"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-tr from-magenta/95 via-magenta/85 to-magenta/60"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.12] mix-blend-multiply"
         style={{
           backgroundImage:
             "repeating-linear-gradient(135deg, transparent 0 24px, rgba(0,0,0,0.18) 24px 25px)",
@@ -1057,7 +1130,20 @@ function ClosingSection() {
     <section className="relative isolate overflow-hidden bg-ink-950">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.08]"
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage: "url(/assets/photo/study.jpg)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-br from-ink-950/95 via-ink-950/92 to-ink-950/80"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 opacity-[0.1]"
         style={{
           backgroundImage:
             "radial-gradient(circle at 20% 30%, #ff2d92 0%, transparent 40%), radial-gradient(circle at 80% 70%, #ff2d92 0%, transparent 35%)",
