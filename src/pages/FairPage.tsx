@@ -4,7 +4,6 @@ import {
   Camera,
   Check,
   Download,
-  FileText,
   ImagePlus,
   Loader2,
   Megaphone,
@@ -31,12 +30,22 @@ const OUTPUT_EDGE = 1600;
 const OUTPUT_QUALITY = 0.85;
 
 const PICKETS = [
-  { n: "01", phrase: "자료 공개 없는 검증은 검증이 아닙니다", href: "/downloads/picket-01.pdf" },
-  { n: "02", phrase: "셀프 감사 말고 문서를 공개하라", href: "/downloads/picket-02.pdf" },
-  { n: "03", phrase: "그 연구실 문, 우리 아이에게도 열립니까", href: "/downloads/picket-03.pdf" },
-  { n: "04", phrase: "국가 연구성과가 왜 후보 아들 스펙이 됐습니까", href: "/downloads/picket-04.pdf" },
-  { n: "05", phrase: "권순기는 서울대 입학 서류를 공개하라", href: "/downloads/picket-05.pdf" },
-  { n: "06", phrase: "권순기는 연구기여도 자료를 공개하라", href: "/downloads/picket-06.pdf" },
+  {
+    n: "01",
+    title: "엄마찬스 해명하라",
+    phrase: "권순기는 자녀 서울대 진학 의혹에 대해 도민 앞에 제대로 해명하라",
+    thumb: "/assets/photo/picket-01-thumb.png",
+    href: "/downloads/picket-01-mom-chance.png",
+    bg: "bg-magenta",
+  },
+  {
+    n: "02",
+    title: "입시부정 해명하라",
+    phrase: "권순기는 자녀 서울대 진학 의혹에 대해 도민 앞에 제대로 해명하라",
+    thumb: "/assets/photo/picket-02-thumb.png",
+    href: "/downloads/picket-02-admission-fraud.png",
+    bg: "bg-yellow-400",
+  },
 ] as const;
 
 const GOOD_EXAMPLES = [
@@ -172,21 +181,18 @@ export default function FairPage() {
               <AlertTriangle aria-hidden className="mt-0.5 h-6 w-6 shrink-0 text-amber-300" />
               <div>
                 <p className="text-base font-bold text-amber-200 sm:text-lg">
-                  참여 원칙 — 공직선거법 안내
+                  공직선거법 안내
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-amber-100/90 sm:text-base">
-                  공직선거법상 선거운동기간 중에는 누구든지 규격 범위의 소형
-                  소품을 본인 부담으로 만들어 <strong>몸에 붙이거나 지니고</strong>{" "}
-                  선거운동할 수 있습니다.
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-amber-100/90 sm:text-base">
-                  따라서 인증샷도 같은 원칙으로 받습니다.{" "}
+                  공직선거법상 선거운동기간 중에는 누구든지{" "}
+                  <strong className="text-amber-100">3면 25cm 이내</strong>의
+                  소형 소품을 본인 부담으로 만들어 몸에 붙이거나 지니고
+                  선거운동할 수 있습니다.{" "}
                   <strong className="text-amber-100">
                     피켓은 반드시 손에 들거나 몸에 붙인 상태로 참여해 주십시오.
                   </strong>{" "}
                   바닥·벽·책상에 따로 놓인 피켓만 찍은 사진은 릴레이 인증으로
-                  받지 않습니다. (선거법은 가끔 인간보다 문구 위치에 더
-                  집착합니다 — 피켓은 사람과 붙어 있어야 합니다.)
+                  받지 않습니다.
                 </p>
               </div>
             </div>
@@ -200,49 +206,46 @@ export default function FairPage() {
           <StepHeader n="01" kicker="Download" title="피켓 다운로드하기" />
 
           <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-300 sm:text-lg">
-            A4 출력용 피켓을 내려받아 인쇄하십시오. 인쇄 후 절단선에 맞춰 잘라
-            사용하십시오. 흑백 인쇄로도 읽히도록 큰 글씨 버전으로 준비합니다.
+            A4 출력용 피켓을 내려받아 인쇄하여,{" "}
+            <strong className="text-ink-100">
+              긴 면이 25cm 안으로 들어오도록
+            </strong>{" "}
+            잘라 사용하세요.
           </p>
 
-          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-10 grid gap-5 md:grid-cols-2">
             {PICKETS.map((p) => (
               <a
                 key={p.n}
                 href={p.href}
                 download
-                className="group flex items-start gap-4 rounded-2xl border border-ink-700 bg-ink-800/40 p-5 transition-colors hover:border-magenta/40 hover:bg-magenta/[0.06] sm:p-6"
+                className="group overflow-hidden rounded-3xl border border-ink-700 bg-ink-800/40 transition-all hover:-translate-y-0.5 hover:border-magenta/40"
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-magenta/15 text-magenta">
-                  <FileText className="h-5 w-5" />
-                </span>
-                <div className="min-w-0 flex-1">
-                  <p className="text-xs font-bold tracking-[0.1em] text-magenta uppercase">
-                    Picket {p.n}
-                  </p>
-                  <p className="mt-1 text-base leading-snug font-bold tracking-[-0.01em] text-ink-50">
-                    “{p.phrase}”
-                  </p>
-                  <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-ink-400 group-hover:text-magenta">
-                    <Download className="h-3.5 w-3.5" />
-                    PDF 다운로드
-                  </p>
+                <div className={`relative aspect-[4/3] overflow-hidden ${p.bg}`}>
+                  <img
+                    src={p.thumb}
+                    alt={`피켓 ${p.n} 미리보기 — ${p.title}`}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                </div>
+                <div className="flex items-center justify-between gap-4 px-6 py-5 sm:px-7 sm:py-6">
+                  <div className="min-w-0">
+                    <p className="text-xs font-bold tracking-[0.12em] text-magenta uppercase">
+                      Picket {p.n}
+                    </p>
+                    <p className="mt-1 text-xl leading-tight font-bold tracking-[-0.02em] text-ink-50 sm:text-2xl">
+                      {p.title}
+                    </p>
+                  </div>
+                  <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-magenta px-5 py-2.5 text-sm font-bold text-ink-900 transition-transform group-hover:-translate-y-0.5">
+                    <Download className="h-4 w-4" />
+                    PNG
+                  </span>
                 </div>
               </a>
             ))}
           </div>
-
-          <p className="mt-8 text-sm leading-relaxed text-ink-400">
-            <strong className="text-ink-200">규격:</strong> 길이·너비·높이 각
-            25cm 이내. 문구는 크게, 짧게, 한눈에 읽히게 작성하십시오.
-            다운로드가 어렵다면 A4 용지에 위 문구 중 하나를 크게 쓰고 25cm
-            이내로 접거나 잘라 쓰셔도 됩니다.
-          </p>
-
-          <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-ink-700 bg-ink-800/40 px-4 py-2 text-xs text-ink-300">
-            <AlertTriangle className="h-3.5 w-3.5 text-amber-300" />
-            피켓 PDF는 준비 중입니다. (관리자: <code>public/downloads/</code>에
-            업로드 시 자동 활성)
-          </p>
         </div>
       </section>
 
@@ -251,10 +254,14 @@ export default function FairPage() {
         <div className="mx-auto max-w-screen-xl px-5 py-20 sm:px-6 sm:py-28 lg:px-8">
           <StepHeader n="02" kicker="Photo" title="피켓 들고 찍기" />
 
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-300 sm:text-lg">
-            혼자 서 있는 모습을 찍으십시오. 얼굴 공개는 선택입니다. 중요한 것은
-            하나입니다 —{" "}
-            <strong className="text-ink-50">
+          <p className="mt-6 max-w-2xl text-xl leading-relaxed font-bold tracking-[-0.015em] text-ink-50 sm:text-2xl">
+            피켓을 들고 사진을 찍어주세요!
+            <br />
+            얼굴은 나오지 않아도 괜찮습니다.
+          </p>
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink-300 sm:text-lg">
+            중요한 것은 하나입니다 —{" "}
+            <strong className="text-ink-100">
               피켓이 반드시 보이고, 참여자가 그 피켓을 손에 들고 있거나 몸에
               붙이고 있어야 합니다.
             </strong>
@@ -270,23 +277,53 @@ export default function FairPage() {
       {/* STEP 3 — Upload */}
       <section id="upload" className="bg-ink-900 scroll-mt-24">
         <div className="mx-auto max-w-screen-xl px-5 py-20 sm:px-6 sm:py-28 lg:px-8">
-          <StepHeader n="03" kicker="Upload" title="올리기" />
+          <StepHeader n="03" kicker="Upload" title="인증샷 올리기" />
 
-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-300 sm:text-lg">
-            아래 버튼으로 인증샷을 올리면 운영자 확인 후 이 페이지에 게시됩니다.
-            사진 아래에는 지역과 한 줄 메시지만 표시되며, 이름·연락처는 공개되지
-            않습니다.
-          </p>
+          <div className="relative mt-10 overflow-hidden rounded-[2rem] border border-magenta/30 bg-magenta/[0.07]">
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -top-24 -right-24 h-72 w-72 rounded-full bg-magenta/30 blur-[100px]"
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-magenta/20 blur-[100px]"
+            />
 
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            disabled={!SUPABASE_ENABLED}
-            className="mt-8 inline-flex items-center gap-2 rounded-full bg-magenta px-8 py-5 text-lg font-bold text-ink-900 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <Camera className="h-6 w-6" />
-            인증샷 올리기
-          </button>
+            <div className="relative grid gap-10 px-7 py-12 sm:px-12 sm:py-16 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+              <div>
+                <h3 className="text-[clamp(28px,5vw,52px)] leading-[1.05] font-bold tracking-[-0.025em] text-ink-50">
+                  인증샷을 올려주세요!
+                </h3>
+                <p className="mt-5 max-w-xl text-lg leading-relaxed text-ink-100 sm:text-xl">
+                  우리의 행동이 모여{" "}
+                  <strong className="text-magenta">공정한 경남교육</strong>을
+                  만듭니다.
+                </p>
+                <p className="mt-6 max-w-xl text-sm leading-relaxed text-ink-300 sm:text-base">
+                  운영자 확인 후 이 페이지에 게시됩니다. 사진 아래에는 지역과
+                  한 줄 메시지만 표시되며, 이름·연락처는 공개되지 않습니다.
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <button
+                  type="button"
+                  onClick={() => setOpen(true)}
+                  disabled={!SUPABASE_ENABLED}
+                  className="group inline-flex items-center justify-between gap-3 rounded-2xl bg-magenta px-7 py-6 text-lg font-bold text-ink-900 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 sm:text-xl"
+                >
+                  <span className="inline-flex items-center gap-3">
+                    <Camera className="h-6 w-6" />
+                    인증샷 올리기
+                  </span>
+                  <Upload className="h-6 w-6 transition-transform group-hover:-translate-y-0.5" />
+                </button>
+                <p className="px-2 text-xs text-ink-400">
+                  최대 12MB · 자동으로 정사각형으로 잘려요
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
