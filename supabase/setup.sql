@@ -24,15 +24,19 @@ create index if not exists photos_approved_created_idx
 
 alter table public.photos enable row level security;
 
+-- 자동 게시: anon 도 모든 사진 SELECT
 drop policy if exists "anon read approved" on public.photos;
-create policy "anon read approved"
+drop policy if exists "anon read all" on public.photos;
+create policy "anon read all"
   on public.photos for select to anon, authenticated
-  using (approved = true);
+  using (true);
 
+-- 자동 게시: anon 도 approved=true 로 INSERT 가능
 drop policy if exists "anon insert unapproved" on public.photos;
-create policy "anon insert unapproved"
+drop policy if exists "anon insert" on public.photos;
+create policy "anon insert"
   on public.photos for insert to anon, authenticated
-  with check (approved = false);
+  with check (true);
 
 drop policy if exists "auth select all" on public.photos;
 create policy "auth select all"

@@ -1,6 +1,7 @@
 export const SITE_NAME = "권순기";
 export const SITE_URL = "https://xn--lr4b14b6tba.kr"; // 권순기.kr (punycode)
-export const SITE_DESCRIPTION = "권순기 — 공식 웹사이트.";
+export const SITE_DESCRIPTION =
+  "엄마 연구실에서 만든 스펙, 그 끝은 서울대였습니다. 권순기 경남교육감 후보는 답해야 합니다.";
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 export type SeoMeta = {

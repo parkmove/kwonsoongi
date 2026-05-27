@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import Seo from "../components/Seo";
+import PhotoGallery from "../components/PhotoGallery";
 
 /* ============================================================== */
 /* DATA                                                            */
@@ -240,6 +241,7 @@ export default function HomePage() {
       />
 
       <Hero />
+      <VoiceWallSection />
       <SectionDivider
         label="평범한 사람들은 알 수 없는 세계"
         num="01"
@@ -397,6 +399,47 @@ function Hero() {
         className="absolute bottom-8 left-1/2 -translate-x-1/2 text-xs tracking-[0.2em] text-ink-400 uppercase"
       >
         ▼ Scroll
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================== */
+/* VOICE WALL — 인증샷 그리드 (Section 2)                          */
+/* ============================================================== */
+
+function VoiceWallSection() {
+  return (
+    <section className="relative isolate overflow-hidden bg-ink-950">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-32 -left-32 h-96 w-96 rounded-full bg-magenta/15 blur-[120px]"
+      />
+      <div className="relative mx-auto max-w-screen-2xl px-5 py-20 sm:px-6 sm:py-28 lg:px-8">
+        <div className="grid items-end gap-6 sm:grid-cols-[1fr_auto] sm:gap-10">
+          <div>
+            <p className="inline-flex items-center gap-2 rounded-full border border-magenta/40 bg-magenta/10 px-4 py-1.5 text-xs font-bold tracking-[0.1em] text-magenta uppercase">
+              <Megaphone className="h-4 w-4" />
+              Wall of Voices · 릴레이 1인시위
+            </p>
+            <h2 className="mt-5 text-[clamp(28px,5vw,52px)] leading-[1.05] font-bold tracking-[-0.025em] text-ink-50">
+              도민들이 요구하고 있습니다.
+              <br />
+              <span className="text-magenta">언제까지 침묵하실 겁니까.</span>
+            </h2>
+          </div>
+          <Link
+            to="/fair"
+            className="inline-flex items-center gap-2 self-end rounded-full border-2 border-ink-200/40 px-6 py-3 text-sm font-bold text-ink-100 transition-colors hover:border-ink-200 hover:bg-ink-200 hover:text-ink-900"
+          >
+            나도 참여하기
+            <ArrowUpRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        <div className="mt-12">
+          <PhotoGallery limit={20} tone="dark" />
+        </div>
       </div>
     </section>
   );

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import {
   AlertTriangle,
   Camera,
@@ -15,6 +15,7 @@ import { motion } from "motion/react";
 import Cropper, { type Area } from "react-easy-crop";
 import { Turnstile } from "@marsidev/react-turnstile";
 import Seo from "../components/Seo";
+import PhotoGallery from "../components/PhotoGallery";
 import {
   FAIR_BUCKET,
   FAIR_TABLE,
@@ -22,7 +23,6 @@ import {
   TURNSTILE_ENABLED,
   TURNSTILE_SITE_KEY,
   supabase,
-  type FairPhoto,
 } from "../lib/supabase";
 
 const MAX_INPUT_BYTES = 12 * 1024 * 1024;
@@ -90,28 +90,8 @@ function loadImage(src: string): Promise<HTMLImageElement> {
 }
 
 export default function FairPage() {
-  const [photos, setPhotos] = useState<FairPhoto[]>([]);
-  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-
-  const refetch = useCallback(async () => {
-    if (!supabase) {
-      setLoading(false);
-      return;
-    }
-    const { data } = await supabase
-      .from(FAIR_TABLE)
-      .select("*")
-      .eq("approved", true)
-      .order("created_at", { ascending: false })
-      .limit(120);
-    if (data) setPhotos(data as FairPhoto[]);
-    setLoading(false);
-  }, []);
-
-  useEffect(() => {
-    void refetch();
-  }, [refetch]);
+  const [galleryKey, setGalleryKey] = useState(0);
 
   return (
     <>
@@ -196,6 +176,41 @@ export default function FairPage() {
                 </p>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 인증샷 갤러리 — 1섹션 */}
+      <section className="bg-ink-50">
+        <div className="mx-auto max-w-screen-2xl px-5 py-16 sm:px-6 sm:py-24 lg:px-8">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-bold tracking-[0.08em] text-magenta uppercase">
+                Wall of Voices
+              </p>
+              <h2 className="mt-2 text-3xl font-bold tracking-[-0.025em] text-ink-900 sm:text-5xl">
+                참여자 인증샷
+              </h2>
+            </div>
+            <p className="text-base text-ink-500">
+              지금까지 함께해 주신 분들의 기록
+            </p>
+          </div>
+
+          <div className="mt-10">
+            <PhotoGallery key={galleryKey} limit={120} tone="light" />
+          </div>
+
+          <div className="mt-10 text-center">
+            <button
+              type="button"
+              onClick={() => setOpen(true)}
+              disabled={!SUPABASE_ENABLED}
+              className="inline-flex items-center gap-2 rounded-full bg-magenta px-7 py-4 text-base font-bold text-ink-900 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <Camera className="h-5 w-5" />
+              나도 인증샷 올리기
+            </button>
           </div>
         </div>
       </section>
@@ -300,8 +315,8 @@ export default function FairPage() {
                   만듭니다.
                 </p>
                 <p className="mt-6 max-w-xl text-sm leading-relaxed text-ink-300 sm:text-base">
-                  운영자 확인 후 이 페이지에 게시됩니다. 사진 아래에는 지역과
-                  한 줄 메시지만 표시되며, 이름·연락처는 공개되지 않습니다.
+                  업로드 즉시 게시됩니다. 사진 아래에는 지역과 한 줄 메시지만
+                  표시되며, 이름·연락처는 공개되지 않습니다.
                 </p>
               </div>
 
@@ -327,111 +342,12 @@ export default function FairPage() {
         </div>
       </section>
 
-      {/* 갤러리 */}
-      <section className="bg-ink-50">
-        <div className="mx-auto max-w-screen-2xl px-5 py-16 sm:px-6 sm:py-24 lg:px-8">
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <p className="text-sm font-bold tracking-[0.08em] text-magenta uppercase">
-                Wall of Voices
-              </p>
-              <h2 className="mt-2 text-3xl font-bold tracking-[-0.025em] text-ink-900 sm:text-5xl">
-                참여자 인증샷
-              </h2>
-            </div>
-            <p className="text-base text-ink-500">
-              {SUPABASE_ENABLED && !loading
-                ? `지금까지 ${photos.length}명이 참여했습니다.`
-                : "함께해 주신 분들의 기록"}
-            </p>
-          </div>
-
-          <div className="mt-10">
-            {!SUPABASE_ENABLED && (
-              <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 text-base text-amber-900">
-                업로드 기능은 곧 열립니다. (관리자: Supabase 환경변수가 아직
-                설정되지 않았습니다.)
-              </div>
-            )}
-
-            {SUPABASE_ENABLED && loading && (
-              <div className="flex items-center gap-3 text-base text-ink-500">
-                <Loader2 className="h-5 w-5 animate-spin" />
-                인증샷을 불러오는 중…
-              </div>
-            )}
-
-            {SUPABASE_ENABLED && !loading && photos.length === 0 && (
-              <div className="rounded-3xl border border-dashed border-ink-300 bg-white p-12 text-center text-base text-ink-500">
-                <p className="font-bold text-ink-700">
-                  아직 올라온 인증샷이 없습니다.
-                </p>
-                <p className="mt-2">
-                  첫 번째 한 사람이 되어 주세요. 5분이면 충분합니다.
-                </p>
-              </div>
-            )}
-
-            {photos.length > 0 && (
-              <motion.ul
-                initial="hidden"
-                animate="show"
-                variants={{
-                  hidden: {},
-                  show: { transition: { staggerChildren: 0.04 } },
-                }}
-                className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
-              >
-                {photos.map((p) => (
-                  <motion.li
-                    key={p.id}
-                    variants={{
-                      hidden: { opacity: 0, y: 12 },
-                      show: { opacity: 1, y: 0 },
-                    }}
-                    className="group overflow-hidden rounded-2xl bg-white shadow-sm"
-                  >
-                    <a
-                      href={p.public_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block"
-                    >
-                      <img
-                        src={p.public_url}
-                        alt={p.caption ?? `${p.author_name}님 인증샷`}
-                        loading="lazy"
-                        className="aspect-square h-auto w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                      />
-                    </a>
-                    <div className="space-y-1 px-4 py-3">
-                      <p className="line-clamp-2 text-sm leading-relaxed font-bold text-ink-900">
-                        {p.caption}
-                      </p>
-                      <p className="flex items-baseline justify-between gap-2 text-xs text-ink-400">
-                        <span>— {p.author_name}</span>
-                        <span>
-                          {new Date(p.created_at).toLocaleDateString("ko-KR", {
-                            month: "2-digit",
-                            day: "2-digit",
-                          })}
-                        </span>
-                      </p>
-                    </div>
-                  </motion.li>
-                ))}
-              </motion.ul>
-            )}
-          </div>
-        </div>
-      </section>
-
       {open && (
         <UploadDialog
           onClose={() => setOpen(false)}
           onUploaded={() => {
             setOpen(false);
-            void refetch();
+            setGalleryKey((k) => k + 1);
           }}
         />
       )}
@@ -609,7 +525,7 @@ function UploadDialog({
         public_url: pub.publicUrl,
         caption: caption.trim(),
         author_name: authorName.trim(),
-        approved: false,
+        approved: true,
       });
       if (insErr) throw insErr;
 
@@ -649,7 +565,7 @@ function UploadDialog({
               참여해 주셔서 감사합니다.
             </p>
             <p className="mt-3 text-base text-ink-500">
-              운영자 검토 후 게시됩니다.
+              방금 올린 인증샷이 바로 게시됩니다.
             </p>
           </div>
         ) : (
