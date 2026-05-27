@@ -2,6 +2,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   AlertTriangle,
   Camera,
+  Check,
+  Download,
+  FileText,
   ImagePlus,
   Loader2,
   Megaphone,
@@ -27,11 +30,26 @@ const MAX_INPUT_BYTES = 12 * 1024 * 1024;
 const OUTPUT_EDGE = 1600;
 const OUTPUT_QUALITY = 0.85;
 
-const PICKET_PHRASES = [
-  "내 아이는 안 됩니다. 그 집 아이는 됩니까?",
-  "엄마 찬스로 서울대, 교육감은 안 됩니다",
-  "국가 예산 9억으로 만든 스펙, 공정합니까?",
-  "권순기는 검증 자료를 공개하라",
+const PICKETS = [
+  { n: "01", phrase: "자료 공개 없는 검증은 검증이 아닙니다", href: "/downloads/picket-01.pdf" },
+  { n: "02", phrase: "셀프 감사 말고 문서를 공개하라", href: "/downloads/picket-02.pdf" },
+  { n: "03", phrase: "그 연구실 문, 우리 아이에게도 열립니까", href: "/downloads/picket-03.pdf" },
+  { n: "04", phrase: "국가 연구성과가 왜 후보 아들 스펙이 됐습니까", href: "/downloads/picket-04.pdf" },
+  { n: "05", phrase: "권순기는 서울대 입학 서류를 공개하라", href: "/downloads/picket-05.pdf" },
+  { n: "06", phrase: "권순기는 연구기여도 자료를 공개하라", href: "/downloads/picket-06.pdf" },
+] as const;
+
+const GOOD_EXAMPLES = [
+  "손에 피켓을 들고 정면을 보고 찍은 사진",
+  "피켓을 가슴 앞에 붙이고 찍은 사진",
+  "얼굴은 가리고 피켓과 손만 보이게 찍은 사진",
+];
+
+const BAD_EXAMPLES = [
+  "피켓만 따로 찍은 사진",
+  "피켓을 바닥·벽에 세워둔 사진",
+  "여러 사람이 줄지어 행진하는 사진",
+  "욕설·허위사실·인신공격 문구가 들어간 사진",
 ];
 
 async function makeSquareWebp(src: string, crop: Area): Promise<Blob> {
@@ -41,20 +59,8 @@ async function makeSquareWebp(src: string, crop: Area): Promise<Blob> {
   canvas.height = OUTPUT_EDGE;
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("canvas context 없음");
-  ctx.drawImage(
-    img,
-    crop.x,
-    crop.y,
-    crop.width,
-    crop.height,
-    0,
-    0,
-    OUTPUT_EDGE,
-    OUTPUT_EDGE,
-  );
-  const supportsWebp = canvas
-    .toDataURL("image/webp")
-    .startsWith("data:image/webp");
+  ctx.drawImage(img, crop.x, crop.y, crop.width, crop.height, 0, 0, OUTPUT_EDGE, OUTPUT_EDGE);
+  const supportsWebp = canvas.toDataURL("image/webp").startsWith("data:image/webp");
   const mime = supportsWebp ? "image/webp" : "image/jpeg";
   return await new Promise<Blob>((resolve, reject) => {
     canvas.toBlob(
@@ -102,7 +108,7 @@ export default function FairPage() {
     <>
       <Seo
         title="릴레이 1인시위"
-        description="내가 경남 교육을 걱정합니다. 누구나, 어디서든."
+        description="권순기 후보에게 검증자료 공개를 요구하는 시민 행동. 누구나, 어디서든."
         path="/fair"
       />
 
@@ -111,9 +117,7 @@ export default function FairPage() {
         <div
           aria-hidden
           className="pointer-events-none absolute top-1/2 right-[-25vw] z-0 h-[80vw] w-[80vw] max-h-[800px] max-w-[800px] -translate-y-1/2 rounded-full opacity-25 blur-[120px]"
-          style={{
-            background: "radial-gradient(circle, #ff2d92 0%, transparent 60%)",
-          }}
+          style={{ background: "radial-gradient(circle, #ff2d92 0%, transparent 60%)" }}
         />
 
         <div className="relative z-10 mx-auto max-w-screen-xl px-5 pt-24 pb-12 sm:px-6 sm:pt-32 sm:pb-16 lg:px-8">
@@ -132,119 +136,157 @@ export default function FairPage() {
             걱정합니다.
           </motion.h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-200">
-            혼자여도 됩니다. 5분이어도 됩니다. A4 한 장이면 충분합니다.
-            권순기 후보가 도민의 질문에 대답할 수 있도록, 지금 함께해 주세요.
+            이 릴레이는{" "}
+            <strong className="text-ink-50">
+              권순기 후보에게 검증자료 공개를 요구하는 시민 행동
+            </strong>
+            입니다. 혼자여도 됩니다. 5분이어도 됩니다. A4 한 장이면 충분합니다.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
+            <a
+              href="#step1"
+              className="inline-flex items-center gap-2 rounded-full bg-magenta px-7 py-4 text-base font-bold tracking-[-0.01em] text-ink-900 transition-transform hover:-translate-y-0.5"
+            >
+              <Download className="h-5 w-5" />
+              피켓 다운로드
+            </a>
             <button
               type="button"
               onClick={() => setOpen(true)}
               disabled={!SUPABASE_ENABLED}
-              className="inline-flex items-center gap-2 rounded-full bg-magenta px-7 py-4 text-base font-bold tracking-[-0.01em] text-ink-900 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-ink-200/40 px-7 py-4 text-base font-bold tracking-[-0.01em] text-ink-100 transition-colors hover:border-ink-200 hover:bg-ink-200 hover:text-ink-900 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <Camera className="h-5 w-5" />
               인증샷 올리기
             </button>
-            <a
-              href="#how"
-              className="inline-flex items-center gap-2 rounded-full border-2 border-ink-200/40 px-7 py-4 text-base font-bold tracking-[-0.01em] text-ink-100 transition-colors hover:border-ink-200 hover:bg-ink-200 hover:text-ink-900"
-            >
-              참여 방법 보기
-            </a>
           </div>
         </div>
       </section>
 
-      {/* 공직선거법 안내 */}
+      {/* 참여 원칙 — 공직선거법 */}
       <section className="bg-ink-900">
         <div className="mx-auto max-w-screen-xl px-5 sm:px-6 lg:px-8">
-          <div className="flex items-start gap-4 rounded-3xl border border-amber-500/30 bg-amber-500/[0.06] px-6 py-5 sm:px-8 sm:py-6">
-            <AlertTriangle
-              aria-hidden
-              className="mt-0.5 h-6 w-6 shrink-0 text-amber-300"
-            />
-            <div className="text-sm leading-relaxed text-amber-100/90 sm:text-base">
-              <p className="font-bold text-amber-200">공직선거법 안내</p>
-              <p className="mt-1">
-                공직선거법 제68조에 따라 <strong>선거기간 개시일 이후</strong>
-                , 누구든지 피켓·표지물을 들고 선거운동을 할 수 있습니다. 참여
-                전 관할 선거관리위원회에 사전 문의하시길 권장합니다.
-              </p>
+          <div className="rounded-3xl border border-amber-500/30 bg-amber-500/[0.06] p-6 sm:p-8">
+            <div className="flex items-start gap-4">
+              <AlertTriangle aria-hidden className="mt-0.5 h-6 w-6 shrink-0 text-amber-300" />
+              <div>
+                <p className="text-base font-bold text-amber-200 sm:text-lg">
+                  참여 원칙 — 공직선거법 안내
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-amber-100/90 sm:text-base">
+                  공직선거법상 선거운동기간 중에는 누구든지 규격 범위의 소형
+                  소품을 본인 부담으로 만들어 <strong>몸에 붙이거나 지니고</strong>{" "}
+                  선거운동할 수 있습니다.
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-amber-100/90 sm:text-base">
+                  따라서 인증샷도 같은 원칙으로 받습니다.{" "}
+                  <strong className="text-amber-100">
+                    피켓은 반드시 손에 들거나 몸에 붙인 상태로 참여해 주십시오.
+                  </strong>{" "}
+                  바닥·벽·책상에 따로 놓인 피켓만 찍은 사진은 릴레이 인증으로
+                  받지 않습니다. (선거법은 가끔 인간보다 문구 위치에 더
+                  집착합니다 — 피켓은 사람과 붙어 있어야 합니다.)
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 3단계 */}
-      <section id="how" className="bg-ink-900 scroll-mt-24">
+      {/* STEP 1 — Download */}
+      <section id="step1" className="bg-ink-900 scroll-mt-24">
         <div className="mx-auto max-w-screen-xl px-5 py-20 sm:px-6 sm:py-28 lg:px-8">
-          <p className="text-sm font-bold tracking-[0.08em] text-magenta uppercase">
-            How to
+          <StepHeader n="01" kicker="Download" title="피켓 다운로드하기" />
+
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-300 sm:text-lg">
+            A4 출력용 피켓을 내려받아 인쇄하십시오. 인쇄 후 절단선에 맞춰 잘라
+            사용하십시오. 흑백 인쇄로도 읽히도록 큰 글씨 버전으로 준비합니다.
           </p>
-          <h2 className="mt-2 text-3xl leading-tight font-bold tracking-[-0.025em] text-ink-50 sm:text-5xl">
-            세 단계면 충분합니다.
-          </h2>
 
-          <ol className="mt-12 grid gap-6 md:grid-cols-3">
-            <li className="rounded-3xl border border-ink-700 bg-ink-800/40 p-7 sm:p-8">
-              <p className="text-sm font-bold text-magenta">STEP 01</p>
-              <h3 className="mt-2 text-2xl font-bold tracking-[-0.02em] text-ink-50">
-                피켓 만들기
-              </h3>
-              <p className="mt-3 text-base leading-relaxed text-ink-300">
-                A4 용지에 아래 문구 중 하나를 적습니다.
-                <span className="mt-1 block text-xs text-ink-500">
-                  각 면 25cm 이내 권장
-                </span>
-              </p>
-              <ul className="mt-5 space-y-2.5">
-                {PICKET_PHRASES.map((p) => (
-                  <li
-                    key={p}
-                    className="rounded-xl border border-magenta/20 bg-magenta/[0.06] px-4 py-3 text-sm leading-snug font-bold text-ink-50"
-                  >
-                    “{p}”
-                  </li>
-                ))}
-              </ul>
-            </li>
-
-            <li className="rounded-3xl border border-ink-700 bg-ink-800/40 p-7 sm:p-8">
-              <p className="text-sm font-bold text-magenta">STEP 02</p>
-              <h3 className="mt-2 text-2xl font-bold tracking-[-0.02em] text-ink-50">
-                사진 찍기
-              </h3>
-              <p className="mt-3 text-base leading-relaxed text-ink-300">
-                혼자 서 있는 모습을 찍습니다. 얼굴 공개는 선택입니다. 장소는
-                어디든 괜찮습니다.
-              </p>
-              <ul className="mt-5 space-y-2 text-sm text-ink-400">
-                <li>· 등 뒤에서 찍어도 됩니다.</li>
-                <li>· 마스크·모자도 좋습니다.</li>
-                <li>· 5분이면 충분합니다.</li>
-              </ul>
-            </li>
-
-            <li className="rounded-3xl border border-magenta/30 bg-magenta/[0.08] p-7 sm:p-8">
-              <p className="text-sm font-bold text-magenta">STEP 03</p>
-              <h3 className="mt-2 text-2xl font-bold tracking-[-0.02em] text-ink-50">
-                올리기
-              </h3>
-              <p className="mt-3 text-base leading-relaxed text-ink-200">
-                아래 버튼으로 업로드하면 운영자 검토 후 이 페이지에 게시됩니다.
-              </p>
-              <button
-                type="button"
-                onClick={() => setOpen(true)}
-                disabled={!SUPABASE_ENABLED}
-                className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-magenta px-6 py-3.5 text-base font-bold text-ink-900 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+          <div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {PICKETS.map((p) => (
+              <a
+                key={p.n}
+                href={p.href}
+                download
+                className="group flex items-start gap-4 rounded-2xl border border-ink-700 bg-ink-800/40 p-5 transition-colors hover:border-magenta/40 hover:bg-magenta/[0.06] sm:p-6"
               >
-                <Camera className="h-5 w-5" />
-                인증샷 올리기
-              </button>
-            </li>
-          </ol>
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-magenta/15 text-magenta">
+                  <FileText className="h-5 w-5" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-bold tracking-[0.1em] text-magenta uppercase">
+                    Picket {p.n}
+                  </p>
+                  <p className="mt-1 text-base leading-snug font-bold tracking-[-0.01em] text-ink-50">
+                    “{p.phrase}”
+                  </p>
+                  <p className="mt-3 inline-flex items-center gap-1.5 text-xs text-ink-400 group-hover:text-magenta">
+                    <Download className="h-3.5 w-3.5" />
+                    PDF 다운로드
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <p className="mt-8 text-sm leading-relaxed text-ink-400">
+            <strong className="text-ink-200">규격:</strong> 길이·너비·높이 각
+            25cm 이내. 문구는 크게, 짧게, 한눈에 읽히게 작성하십시오.
+            다운로드가 어렵다면 A4 용지에 위 문구 중 하나를 크게 쓰고 25cm
+            이내로 접거나 잘라 쓰셔도 됩니다.
+          </p>
+
+          <p className="mt-4 inline-flex items-center gap-2 rounded-full border border-ink-700 bg-ink-800/40 px-4 py-2 text-xs text-ink-300">
+            <AlertTriangle className="h-3.5 w-3.5 text-amber-300" />
+            피켓 PDF는 준비 중입니다. (관리자: <code>public/downloads/</code>에
+            업로드 시 자동 활성)
+          </p>
+        </div>
+      </section>
+
+      {/* STEP 2 — Photo */}
+      <section className="bg-ink-950">
+        <div className="mx-auto max-w-screen-xl px-5 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <StepHeader n="02" kicker="Photo" title="피켓 들고 찍기" />
+
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-300 sm:text-lg">
+            혼자 서 있는 모습을 찍으십시오. 얼굴 공개는 선택입니다. 중요한 것은
+            하나입니다 —{" "}
+            <strong className="text-ink-50">
+              피켓이 반드시 보이고, 참여자가 그 피켓을 손에 들고 있거나 몸에
+              붙이고 있어야 합니다.
+            </strong>
+          </p>
+
+          <div className="mt-10 grid gap-6 lg:grid-cols-2">
+            <DoDontCard tone="good" title="좋은 예" items={GOOD_EXAMPLES} />
+            <DoDontCard tone="bad" title="게시하지 않는 예" items={BAD_EXAMPLES} />
+          </div>
+        </div>
+      </section>
+
+      {/* STEP 3 — Upload */}
+      <section id="upload" className="bg-ink-900 scroll-mt-24">
+        <div className="mx-auto max-w-screen-xl px-5 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <StepHeader n="03" kicker="Upload" title="올리기" />
+
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-300 sm:text-lg">
+            아래 버튼으로 인증샷을 올리면 운영자 확인 후 이 페이지에 게시됩니다.
+            사진 아래에는 지역과 한 줄 메시지만 표시되며, 이름·연락처는 공개되지
+            않습니다.
+          </p>
+
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            disabled={!SUPABASE_ENABLED}
+            className="mt-8 inline-flex items-center gap-2 rounded-full bg-magenta px-8 py-5 text-lg font-bold text-ink-900 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <Camera className="h-6 w-6" />
+            인증샷 올리기
+          </button>
         </div>
       </section>
 
@@ -360,6 +402,93 @@ export default function FairPage() {
   );
 }
 
+/* ============================================================== */
+/* HELPERS                                                         */
+/* ============================================================== */
+
+function StepHeader({
+  n,
+  kicker,
+  title,
+}: {
+  n: string;
+  kicker: string;
+  title: string;
+}) {
+  return (
+    <div className="flex items-end gap-5 sm:gap-7">
+      <span className="text-6xl font-black tracking-[-0.04em] text-magenta sm:text-7xl">
+        {n}
+      </span>
+      <div className="pb-2 sm:pb-3">
+        <p className="text-xs font-bold tracking-[0.14em] text-magenta uppercase sm:text-sm">
+          {kicker}
+        </p>
+        <h2 className="mt-1 text-2xl leading-tight font-bold tracking-[-0.025em] text-ink-50 sm:text-4xl">
+          {title}
+        </h2>
+      </div>
+    </div>
+  );
+}
+
+function DoDontCard({
+  tone,
+  title,
+  items,
+}: {
+  tone: "good" | "bad";
+  title: string;
+  items: readonly string[];
+}) {
+  const isGood = tone === "good";
+  return (
+    <article
+      className={`rounded-3xl border p-7 sm:p-8 ${
+        isGood
+          ? "border-magenta/30 bg-magenta/[0.06]"
+          : "border-ink-700 bg-ink-800/40"
+      }`}
+    >
+      <p
+        className={`inline-flex items-center gap-2 text-xs font-bold tracking-[0.12em] uppercase ${
+          isGood ? "text-magenta" : "text-ink-400"
+        }`}
+      >
+        {isGood ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
+        {title}
+      </p>
+      <h3
+        className={`mt-3 text-xl font-bold tracking-[-0.02em] sm:text-2xl ${
+          isGood ? "text-ink-50" : "text-ink-100"
+        }`}
+      >
+        {isGood ? "이렇게 찍어 주세요" : "이런 사진은 받지 않습니다"}
+      </h3>
+      <ul className="mt-5 space-y-2.5">
+        {items.map((it) => (
+          <li
+            key={it}
+            className="flex gap-3 text-base leading-relaxed text-ink-200"
+          >
+            <span
+              aria-hidden
+              className={`mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full ${
+                isGood ? "bg-magenta" : "bg-ink-500"
+              }`}
+            />
+            <span>{it}</span>
+          </li>
+        ))}
+      </ul>
+    </article>
+  );
+}
+
+/* ============================================================== */
+/* UPLOAD DIALOG                                                   */
+/* ============================================================== */
+
 function UploadDialog({
   onClose,
   onUploaded,
@@ -436,9 +565,7 @@ function UploadDialog({
         });
       if (upErr) throw upErr;
 
-      const { data: pub } = supabase.storage
-        .from(FAIR_BUCKET)
-        .getPublicUrl(path);
+      const { data: pub } = supabase.storage.from(FAIR_BUCKET).getPublicUrl(path);
 
       const { error: insErr } = await supabase.from(FAIR_TABLE).insert({
         storage_path: path,
@@ -533,8 +660,8 @@ function UploadDialog({
                     </button>
                   </div>
                   <p className="mt-2 text-xs text-ink-400">
-                    드래그로 위치 조정, 슬라이더로 확대/축소. 정사각형으로
-                    잘려 올라갑니다.
+                    피켓이 사람과 붙어 있어야 게시됩니다. 정사각형으로 잘려
+                    올라갑니다.
                   </p>
                 </div>
               ) : (

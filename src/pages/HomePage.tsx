@@ -5,6 +5,7 @@ import {
   Award,
   BookOpen,
   ExternalLink,
+  FileCheck,
   FileText,
   FlaskConical,
   GraduationCap,
@@ -36,8 +37,7 @@ const PEOPLE = [
   {
     name: "김윤희",
     role: "권순기의 아내 · 경상국립대 화학과 교수",
-    detail:
-      "국가 연구비 8억 9천만 원을 받아 유기 태양전지 신소재를 6년간 연구.",
+    detail: "유기 태양전지 소재 분야의 국가 연구과제를 수행한 연구자.",
     monogram: "金",
     Icon: FlaskConical,
     accent: "from-ink-700 to-transparent",
@@ -46,7 +46,7 @@ const PEOPLE = [
     name: "권OO",
     role: "두 사람의 아들",
     detail:
-      "경남과학고 재학 중 어머니 연구실에서 R&E를 수행. 이듬해 서울대 합격.",
+      "경남과학고 재학 시절 어머니 연구실에서 R&E에 참여. 이듬해 서울대 합격.",
     monogram: "權",
     Icon: GraduationCap,
     accent: "from-ink-700 to-transparent",
@@ -64,8 +64,8 @@ const TIMELINE: TimelineGroup[] = [
     items: [
       {
         date: "연구과제 착수",
-        title: "어머니, 국가 연구과제 시작",
-        body: "교육과학기술부로부터 태양전지 신소재 연구과제 수주. 같은 해 아들 권OO이 경남과학고 1학년 입학과 함께 동일 주제로 R&E 시작.",
+        title: "어머니, 국가 연구과제 수행 시작",
+        body: "어머니 김윤희 교수가 교육과학기술부·한국연구재단이 관리한 유기 태양전지 소재 연구과제를 수행합니다. 같은 해 아들 권OO이 경남과학고 1학년으로 입학, 어머니 연구실에서 같은 분야의 R&E를 시작합니다. 한쪽은 국가 연구과제, 한쪽은 고교생 연구프로그램. 주제도 연구실도 지도체계도 겹쳤습니다.",
         Icon: Lightbulb,
       },
     ],
@@ -75,14 +75,14 @@ const TIMELINE: TimelineGroup[] = [
     items: [
       {
         date: "04월",
-        title: "특허 출원",
-        body: "알콕시 나프탈렌기를 포함하는 새로운 유기태양전지 재료. 특허권자: 경상대학교산학협력단. 발명자에 어머니 김윤희, 교사, 아들 권OO(고2) 포함.",
+        title: "특허 발명자 등재",
+        body: "「알콕시 나프탈렌기를 포함하는 새로운 유기태양전지 재료」. 특허권자: 경상대학교산학협력단. 발명자에 김윤희·교사·아들 권OO(고2)이 포함됩니다. 어머니의 연구 분야, 국가 연구과제와 이어진 주제였습니다.",
         Icon: FileText,
       },
       {
         date: "09월",
         title: "전국과학전람회 특상",
-        body: "지도논문연구대회에 동일 주제로 출품해 특상 수상.",
+        body: "권OO이 같은 주제로 지도논문연구대회에 출품해 특상을 수상.",
         Icon: Trophy,
       },
     ],
@@ -93,13 +93,13 @@ const TIMELINE: TimelineGroup[] = [
       {
         date: "01월",
         title: "국제청소년 과학창의대전 최우수상",
-        body: "동일 주제로 최우수상 수상.",
+        body: "같은 주제로 최우수상 수상.",
         Icon: Award,
       },
       {
         date: "01–02월",
         title: "SCI급 논문 2편 게재",
-        body: "국내·해외 저널에 SCI급 논문 2편 게재. 제1저자 권OO, 교신저자 김윤희(어머니).",
+        body: "국내·해외 학술지에 SCI급 논문 2편 게재. 제1저자: 권OO / 교신저자: 김윤희(어머니) / 소속: 경남과학고.",
         Icon: ScrollText,
         highlight: true,
       },
@@ -119,23 +119,97 @@ const TIMELINE: TimelineGroup[] = [
   },
 ];
 
-const STATEMENTS = [
+const STATEMENTS: {
+  said: string;
+  source?: string;
+  factTitle: string;
+  factBody: React.ReactNode;
+}[] = [
   {
     said: "이미 청와대, 교육부, 경남교육청에서 철저히 검증해 아무 문제없습니다.",
-    truth:
-      "교육부의 미성년 공저자 조사는 각 대학이 스스로 자료를 제출한 ‘셀프조사’였습니다. 조사를 반복할 때마다 숫자는 549건 → 794건 → 1,033건으로 불어났습니다. 그 시절 경상대 총장이 바로 권순기였습니다.",
     source: "MBC경남 TV 토론회, 2026.05.22",
+    factTitle: "핵심은 ‘검증 완료’가 아닙니다 — ‘셀프 감사’입니다",
+    factBody: (
+      <>
+        <p>
+          교육부의 미성년 공저자 논문 조사는 대학이{" "}
+          <strong className="text-ink-50">자체조사하고 자료를 제출하는 방식</strong>에
+          크게 기대고 있었습니다. 겉은 교육부 검증이지만, 속을 들여다보면
+          문제의 자료를 가진 대학이 스스로 조사해 내놓은 결과가 검증의 출발점이었습니다.
+        </p>
+        <p>
+          교육부 최종 검증결과가 발표된 2022년,{" "}
+          <strong className="text-magenta">권순기는 경상국립대 총장이었습니다.</strong>
+        </p>
+        <p>
+          권순기 후보 가족 의혹의 핵심 자료를 권순기 총장 체제의 대학이 쥐고,
+          그 대학의 자체검증 결과가 ‘교육부 검증’이라는 이름으로 포장될 수 있는
+          구조 — 이것이 셀프 감사입니다.
+        </p>
+        <p className="font-bold text-ink-50">
+          검증이 진짜였다면, 공개하지 못할 이유가 없습니다.
+        </p>
+      </>
+    ),
   },
   {
     said: "교육부 조사에서 문제없음 판정을 받았습니다.",
-    truth:
-      "교육부 조사는 ‘대입 활용 여부’ 중심이었습니다. 국가 연구비의 적정 집행 여부와 발명자 허위 기재 여부는 한국연구재단과 감사원이 별도로 검토해야 할 사안으로, 이 부분은 보지 않았습니다.",
+    factTitle: "‘문제없음’이 끝낸 척하는 단어가 되어서는 안 됩니다",
+    factBody: (
+      <>
+        <p>
+          도민이 묻는 것은 단어가 아니라{" "}
+          <strong className="text-ink-50">범위</strong>입니다. 교육부 조사는
+          무엇을 봤습니까.
+        </p>
+        <ul className="mt-2 space-y-2 border-l-2 border-magenta/40 pl-5 text-base text-ink-100">
+          <li>· 논문 파일을 서울대에 제출했는지만 봤습니까?</li>
+          <li>· 권OO의 제1저자 실질 기여를 확인했습니까?</li>
+          <li>· 국가 연구과제 성과가 가족 입시 스펙으로 이어졌는지 봤습니까?</li>
+          <li>· 특허 발명자 등재의 적정성을 봤습니까?</li>
+          <li>· 어머니 교신저자 / 아들 제1저자 구조에서 이해충돌을 검토했습니까?</li>
+        </ul>
+        <p>
+          하나를 확인했다고 전부 확인한 것이 아닙니다. 이 자료 없이 ‘문제없음’만
+          반복하는 것은 검증이 아니라 도민에게 눈을 감으라는 요구입니다.
+        </p>
+      </>
+    ),
   },
   {
     said: "법적으로도 도덕적으로도 문제없습니다.",
-    truth:
-      "한국연구재단 연구윤리 규정은 ‘실질적 기여 없는 저자 등재’를 연구부정행위로 명시합니다. 경남과학고는 기숙학교입니다. 국가 예산 9억짜리 연구의 핵심 실험을 기숙학교 학생이 주도했다 — 어떻게 생각하십니까?",
+    factTitle: "법적으로 — 그러면 문서로 보여주십시오",
+    factBody: (
+      <>
+        <p>
+          연구윤리는 이름만 올린 저자를 문제로 봅니다. 핵심은 간단합니다 —
+          그 사람이 실제로 연구 아이디어·실험·분석·원고 작성에 충분히
+          기여했느냐.
+        </p>
+        <p>
+          그러면 권OO의 기여를 보여주면 됩니다.{" "}
+          <strong className="text-ink-50">
+            실험일지, 연구노트, 원고 작성 기록, 공동저자 기여도 자료
+          </strong>
+          를 공개하면 됩니다. 정말 제1저자가 맞다면 문서는 가장 강한 방어수단입니다.
+        </p>
+        <p>그런데 왜 아직 도민은 그 문서를 보지 못합니까.</p>
+        <p className="font-bold text-ink-50">
+          교육감의 기준은 법원 문턱이 아니라, 아이들이 납득할 수 있는가입니다.
+        </p>
+      </>
+    ),
   },
+];
+
+const DEMANDS = [
+  "서울대 입학 서류 중 R&E·수상·특허·논문 관련 기재 부분",
+  "서울대 또는 검증기관의 확인 문서",
+  "경상대(경상국립대)가 교육부에 제출한 자체조사 자료",
+  "권OO 논문 2편의 연구윤리 검증 자료",
+  "제1저자 기여도 판단 자료와 연구노트 존재 여부",
+  "특허 발명자 등재 근거 자료",
+  "총장 가족 사안에 대한 이해충돌 회피 조치 여부",
 ];
 
 const SOURCES = [
@@ -143,10 +217,13 @@ const SOURCES = [
   { label: "SCI 논문 1 — Macromolecular Research", url: "https://doi.org/10.1007/s13233-011-0211-7" },
   { label: "SCI 논문 2 — J. Polymer Science", url: "https://doi.org/10.1002/pola.24526" },
   { label: "알콕시 특허 원문 (KR101043047B1)", url: "https://patents.google.com/patent/KR101043047B1/ko" },
-  { label: "국가과제 NTIS", url: "https://www.ntis.go.kr/ThSearchProjectList.do?searchWord=%EC%9A%A9%EC%95%A1+%EA%B3%B5%EC%A0%95%EC%97%90+%EA%B8%B0%EB%B0%98%ED%95%9C+%EA%B3%A0%ED%9A%A8%EC%9C%A8%EC%9D%98+%EC%9C%A0%EA%B8%B0+%EC%A0%81%EC%B8%B5+%ED%83%9C%EC%96%91%EC%A0%84%EC%A7%80%EC%9D%98+%EA%B0%9C%EB%B0%9C" },
+  { label: "국가과제 ScienceON", url: "https://scienceon.kisti.re.kr/srch/selectPORSrchReport.do?cn=TRKO201300012034" },
   { label: "오마이뉴스 (2005.02.01)", url: "https://www.ohmynews.com/NWS_Web/View/at_pg.aspx?CNTN_CD=A0000235397" },
   { label: "노컷뉴스 — 경상대 적발 (2019)", url: "https://www.nocutnews.co.kr/news/5230030" },
-  { label: "교육부 미성년 공저자 검증결과", url: "https://eiec.kdi.re.kr/policy/materialView.do?num=225592" },
+  { label: "교육부 미성년 공저자 검증결과 — 정부 보도자료", url: "https://www.korea.kr/briefing/pressReleaseView.do?newsId=156504811" },
+  { label: "교육부 검증결과 관련 보도 (교수신문)", url: "https://www.kyosu.net/news/articleView.html?idxno=87963" },
+  { label: "권순기 총장 재임 관련 보도 (전자신문)", url: "https://www.etnews.com/20240605000120" },
+  { label: "공직선거법 제68조 소품 선거운동 안내", url: "https://www.easylaw.go.kr/CSP/CnpClsMainBtr.laf?ccfNo=3&cciNo=1&cnpClsNo=2&csmSeq=250&popMenu=ov" },
 ];
 
 /* ============================================================== */
@@ -158,7 +235,7 @@ export default function HomePage() {
     <>
       <Seo
         title=""
-        description="부모찬스로 서울대 의혹, 권순기 경남교육감 후보를 검증합니다."
+        description="엄마 연구실에서 만든 스펙, 그 끝은 서울대였습니다. 권순기 후보는 답해야 합니다."
         path="/"
       />
 
@@ -188,6 +265,7 @@ export default function HomePage() {
       <ProblemSection />
       <SectionDivider label="권순기의 말, 그리고 사실" num="04" tone="alt" />
       <StatementSection />
+      <DemandSection />
       <SectionDivider label="이게 처음이 아닙니다" num="05" />
       <RepetitionSection />
       <CtaSection />
@@ -239,32 +317,39 @@ function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-7 text-[clamp(40px,8vw,108px)] leading-[0.98] font-bold tracking-[-0.035em] text-ink-50"
+          className="mt-7 text-[clamp(36px,7.5vw,96px)] leading-[1.02] font-bold tracking-[-0.035em] text-ink-50"
         >
-          부모찬스로
+          엄마 연구실에서 만든
           <br />
-          <span className="text-magenta">서울대 의혹,</span>
+          <span className="text-magenta">스펙, 그 끝은</span>
           <br />
-          <span className="text-ink-50">
-            권순기 경남교육감
-            <br />
-            후보를 소개합니다.
-          </span>
+          <span className="text-magenta">서울대였습니다.</span>
+          <br />
+          <span className="text-ink-50">권순기 후보는 답해야 합니다.</span>
         </motion.h1>
 
-        <motion.p
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.5 }}
-          className="mt-10 max-w-2xl text-lg leading-relaxed text-pretty text-ink-100 sm:text-xl"
+          className="mt-10 max-w-2xl space-y-4 text-lg leading-relaxed text-pretty text-ink-100 sm:text-xl"
         >
-          <strong className="text-ink-50">
-            엄마 연구실에서, 국가 예산 9억을 쓴 프로젝트에 참여해 논문과
-            스펙을 쌓고, 서울대 최종합격.
-          </strong>
-          <br />
-          경남교육감 후보 권순기 아들에게 일어난 일입니다.
-        </motion.p>
+          <p>
+            경남과학고 학생 권OO. 어머니는 경상국립대 화학과 교수.
+            아들은 어머니 연구실에서, 어머니의 국가 연구과제와 같은 분야의 R&E를
+            했습니다.
+          </p>
+          <p>
+            <strong className="text-ink-50">
+              그 결과는 특허 1건, 전국대회 수상, 국제대회 수상, SCI 논문 2편
+              제1저자. 그리고 서울대 합격.
+            </strong>
+          </p>
+          <p>
+            이것은 한 학생의 순수한 성취입니까. 아니면 평범한 아이들에게는
+            처음부터 열리지 않는 문이었습니까.
+          </p>
+        </motion.div>
 
         <motion.figure
           initial={{ opacity: 0, y: 16 }}
@@ -276,6 +361,12 @@ function Hero() {
             “법적으로도 도덕적으로도 문제없습니다.”
           </blockquote>
           <figcaption className="mt-2 text-sm text-ink-300">— 권순기</figcaption>
+          <p className="mt-5 text-base leading-relaxed text-ink-200 sm:text-lg">
+            그러면 더 쉽습니다.{" "}
+            <strong className="text-ink-50">
+              문제를 제기한 시민을 탓하지 말고, 자료를 공개하면 됩니다.
+            </strong>
+          </p>
         </motion.figure>
 
         <motion.div
@@ -312,7 +403,7 @@ function Hero() {
 }
 
 /* ============================================================== */
-/* SECTION DIVIDER — full-bleed band that separates sections        */
+/* SECTION DIVIDER                                                 */
 /* ============================================================== */
 
 function SectionDivider({
@@ -404,7 +495,6 @@ function PeopleSection() {
                 className={`pointer-events-none absolute inset-x-0 top-0 h-48 bg-gradient-to-b ${p.accent}`}
               />
 
-              {/* Avatar */}
               <div className="relative z-10 flex items-center justify-center pt-10">
                 {"avatar" in p && p.avatar ? (
                   <div className="relative h-32 w-32 overflow-hidden rounded-full ring-4 ring-magenta/40 ring-offset-4 ring-offset-ink-800">
@@ -445,7 +535,6 @@ function PeopleSection() {
           ))}
         </div>
 
-        {/* 가족·연구실 관계 다이어그램 */}
         <div className="mt-10 rounded-3xl border border-magenta/20 bg-magenta/[0.04] px-7 py-6 sm:px-10">
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 text-center text-base font-bold tracking-[-0.01em] text-ink-100 sm:text-lg">
             <span>아버지 권순기</span>
@@ -482,12 +571,15 @@ function PrimerSection() {
             full="Research & Education"
             body={
               <>
-                정부가 과학고 학생에게 대학교수 연구실에서 배울 기회를 주는
-                교육 프로그램입니다.{" "}
-                <strong className="text-ink-50">
-                  “학생이 주도하는 연구”
-                </strong>
-                를 표방합니다.
+                <p>
+                  과학고 학생이 대학교수 연구실에서 연구를 경험하도록 만든 교육
+                  프로그램입니다. 취지는 좋습니다 — 학생에게 더 큰 배움의 기회를
+                  주자는 제도입니다.
+                </p>
+                <p className="mt-3">
+                  <strong className="text-ink-50">문제는 제도 자체가 아닙니다.</strong>{" "}
+                  그 기회가 누구에게, 어떤 경로로, 얼마나 특별하게 열렸느냐입니다.
+                </p>
               </>
             }
           />
@@ -497,16 +589,33 @@ function PrimerSection() {
             full="First Author of SCI Paper"
             body={
               <>
-                SCI는 과학기술 분야에서 세계적 권위를 인정받는 학술지
-                데이터베이스입니다. 제1저자는 핵심 아이디어를 도출하고 실험을
-                주도한 사람.{" "}
-                <strong className="text-ink-50">
-                  이공계 대학원생들이 몇 년씩 매달려야 겨우 한 편을 써내는
-                  자리입니다.
-                </strong>
+                <p>
+                  석사·박사 과정 연구자도 한 편을 쓰기 위해 몇 년을 버팁니다.
+                  제1저자는 단순히 옆에서 구경한 사람이 아니라{" "}
+                  <strong className="text-ink-50">
+                    그 연구의 핵심 아이디어·실험·분석·원고 작성에 가장 크게
+                    기여했다
+                  </strong>
+                  는 표시입니다.
+                </p>
+                <p className="mt-3">
+                  그런데 고등학생 권OO은 SCI 논문 2편에서 제1저자였습니다.
+                  교신저자는 어머니 김윤희 교수였습니다.
+                </p>
               </>
             }
           />
+        </div>
+
+        <div className="mt-10 rounded-3xl border-l-4 border-magenta bg-ink-900/60 px-7 py-7 sm:px-10 sm:py-8">
+          <p className="text-base leading-relaxed text-ink-100 sm:text-lg">
+            이제 질문은 하나입니다.
+          </p>
+          <ul className="mt-3 space-y-1.5 text-lg leading-snug font-bold tracking-[-0.01em] text-ink-50 sm:text-xl">
+            <li>그 기여는 무엇이었습니까.</li>
+            <li>누가 확인했습니까.</li>
+            <li>그 자료는 왜 아직 도민 앞에 공개되지 않았습니까.</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -536,7 +645,7 @@ function PrimerCard({
         <h4 className="mt-1 text-xl font-bold tracking-[-0.02em] text-ink-50">
           {term}
         </h4>
-        <p className="mt-3 text-base leading-relaxed text-ink-300">{body}</p>
+        <div className="mt-3 text-base leading-relaxed text-ink-300">{body}</div>
       </div>
     </article>
   );
@@ -556,7 +665,6 @@ function TimelineSection() {
               key={group.year}
               className="grid gap-6 sm:grid-cols-[180px_1fr] sm:gap-10"
             >
-              {/* Year column */}
               <div className="flex items-start sm:sticky sm:top-24 sm:self-start">
                 <div>
                   <p className="text-xs font-bold tracking-[0.14em] text-magenta uppercase">
@@ -568,7 +676,6 @@ function TimelineSection() {
                 </div>
               </div>
 
-              {/* Events column */}
               <ol className="relative space-y-5 border-l-2 border-ink-700 pl-7 sm:pl-9">
                 {group.items.map((t) => (
                   <li key={t.title} className="relative">
@@ -623,14 +730,16 @@ function SummaryBanner() {
             aria-hidden
             className="pointer-events-none absolute -top-12 -right-12 h-48 w-48 rounded-full bg-ink-900/10 blur-2xl"
           />
-          <div className="relative grid gap-6 sm:grid-cols-4 sm:items-center">
+          <div className="relative grid gap-6 sm:grid-cols-5 sm:items-center">
             <Tally label="특허" value="1건" />
             <Tally label="SCI 논문" value="2편" />
             <Tally label="전국대회" value="특상" />
-            <Tally label="국제대회" value="최우수상" />
+            <Tally label="국제대회" value="최우수" />
+            <Tally label="서울대" value="합격" />
           </div>
           <p className="relative mt-8 text-xl leading-snug font-bold tracking-[-0.02em] text-ink-900 sm:text-2xl">
-            전부 같은 주제, 같은 연구, 어머니 연구실에서 나왔습니다.
+            따로 떨어진 사건들이 아닙니다. 같은 주제, 같은 연구실, 같은
+            지도체계에서 이어진 하나의 흐름입니다.
           </p>
         </div>
       </div>
@@ -659,7 +768,10 @@ function ProblemSection() {
   return (
     <section className="bg-ink-900">
       <div className="mx-auto max-w-screen-xl px-5 py-20 sm:px-6 sm:py-28 lg:px-8">
-        <ProblemBlock no="01" heading="이건 그냥 엄마 찬스가 아닙니다 — 국가 예산 찬스입니다">
+        <ProblemBlock
+          no="01"
+          heading="이것은 그냥 엄마 찬스가 아닙니다 — 국가 연구 찬스 의혹입니다"
+        >
           <Quoted
             text={
               <>
@@ -672,13 +784,13 @@ function ProblemSection() {
           />
 
           <p className="mt-8 text-base leading-relaxed text-ink-200">
-            그런데 아들 논문 원문의 감사의 말에는 이렇게 적혀 있습니다.
+            권OO 논문의 감사의 말에는 국가 연구과제 번호가 등장합니다 — 어머니
+            김윤희 교수가 수행한 연구과제와 연결되는 번호입니다.
           </p>
 
-          {/* 논문 캡처 mockup */}
           <DocumentMock
             title="Acknowledgement"
-            sub="from SCI paper (2011) — KOSEF 과제번호 형광펜"
+            sub="SCI paper (2011) — 국가 연구과제 번호 강조"
             body={
               <>
                 This work was supported by KOFAC (R&E 2009),{" "}
@@ -691,44 +803,48 @@ function ProblemSection() {
           />
 
           <p className="mt-6 text-base leading-relaxed text-ink-200">
-            <strong className="text-ink-50">KOSEF 과제번호 2010-0027732</strong>{" "}
-            — 어머니 김윤희 교수의 국가 연구과제입니다.
+            논문에 국가 과제번호가 적혀 있다는 것은 가볍지 않습니다. 이 논문이
+            개인 취미나 방과후 체험이 아니라,{" "}
+            <strong className="text-ink-50">
+              국가 연구의 성과 체계 안에 놓여 있었다
+            </strong>
+            는 뜻입니다.
+          </p>
+
+          <p className="mt-4 text-base leading-relaxed text-ink-100">
+            국가 연구비는 가족의 입시 사다리가 아닙니다.
             <br />
-            <strong className="text-magenta">6년, 총 8억 9천만 원.</strong>
+            대학 연구실은 특정 집 아이의 스펙 제작소가 아닙니다.
           </p>
 
-          <p className="mt-4 text-base leading-relaxed text-ink-300">
-            논문에 국가 과제번호가 적혀 있다는 건 이 논문이 그 국가 연구의{" "}
-            <strong className="text-ink-50">공식 성과물</strong>이라는 뜻입니다.
-            김윤희 교수가 정부에 제출한{" "}
-            <strong className="text-ink-50">국가 연구 결과보고서</strong>에는
-            2011년 한 해 성과로 이렇게 기재돼 있습니다.
-          </p>
-
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <ResultCard label="SCI 논문 3편" detail="이 중 2편의 제1저자: 아들 권OO" />
-            <ResultCard label="특허 1건" detail="발명자에 아들 권OO 포함" />
+          <div className="mt-8 rounded-2xl border border-ink-700 bg-ink-800/40 p-6 sm:p-7">
+            <p className="text-sm font-bold tracking-[0.08em] text-magenta uppercase">
+              그래서 묻습니다
+            </p>
+            <ul className="mt-4 space-y-2 text-base leading-relaxed text-ink-100">
+              <li>· 권OO은 실제로 어떤 실험을 했습니까.</li>
+              <li>· 언제, 어디서, 얼마나 했습니까.</li>
+              <li>· 연구노트는 있습니까. 기여도 판단 자료는 있습니까.</li>
+              <li>· 국가 연구성과로 보고된 항목과 권OO의 이름은 어떻게 연결됩니까.</li>
+            </ul>
+            <p className="mt-5 text-base font-bold text-ink-50">
+              자료가 있다면 공개하십시오. 말이 아니라 문서로 보여주십시오.
+            </p>
           </div>
-
-          <p className="mt-8 text-xl leading-snug font-bold tracking-[-0.02em] text-ink-50 sm:text-2xl">
-            국민 세금 9억짜리 연구의 그해 핵심 성과 대부분이 고등학생 아들
-            이름으로 나라에 보고됐습니다.
-          </p>
         </ProblemBlock>
 
         <ProblemBlock no="02" heading="어머니가 교신저자, 아들이 제1저자">
           <p className="text-base leading-relaxed text-ink-200">
-            교신저자는 일반적으로 지도교수의 이름이 올라갑니다. 어머니의
-            연구실에서, 국비로 진행한 어머니의 연구과제로, 어머니의 지도를
-            받아 진행한 연구라는 뜻입니다.
+            교신저자는 보통 연구를 책임지고 논문을 이끄는 사람입니다 — 어머니
+            김윤희 교수. 제1저자는 보통 연구의 핵심 기여자로 표시되는 사람입니다
+            — 아들 권OO.
           </p>
 
-          {/* 저자 라벨 시각화 */}
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <AuthorChip
               role="제1저자 (First Author)"
               who="권OO"
-              meta="고등학생 (경남과학고)"
+              meta="고등학생 · 경남과학고"
               tone="magenta"
             />
             <AuthorChip
@@ -740,14 +856,27 @@ function ProblemSection() {
           </div>
 
           <p className="mt-6 text-base leading-relaxed text-ink-200">
-            같은 시기 R&E 프로그램에 함께 참여한 다른 과학고 학생들도
-            있었습니다. 그런데 특허권자에는{" "}
-            <strong className="text-magenta">아들 권OO이 유일하게</strong>{" "}
-            등재되었습니다. 과학고 지도교수였던 B도 특허권자로 등록되었습니다.
+            어머니의 연구실. 어머니의 연구 분야. 어머니가 교신저자인 논문. 그
+            논문의 맨 앞에는 고등학생 아들의 이름.
           </p>
+
+          <div className="mt-7 rounded-2xl border border-ink-700 bg-ink-800/40 p-6 sm:p-7">
+            <p className="text-sm font-bold tracking-[0.08em] text-magenta uppercase">
+              도민은 물을 권리가 있습니다
+            </p>
+            <ul className="mt-4 space-y-2 text-base leading-relaxed text-ink-100">
+              <li>· 정말 권OO이 연구를 주도했습니까.</li>
+              <li>· 대학원생·연구원보다 더 큰 기여를 했습니까.</li>
+              <li>· 그 판단은 누가 했습니까.</li>
+              <li>· 그 판단 자료는 남아 있습니까.</li>
+            </ul>
+            <p className="mt-5 text-base font-bold text-ink-50">
+              ‘문제없다’는 말은 답이 아닙니다. 공개된 검증자료만 답입니다.
+            </p>
+          </div>
         </ProblemBlock>
 
-        <ProblemBlock no="03" heading="‘논문은 입시에 안 썼다’고요?">
+        <ProblemBlock no="03" heading="‘논문은 입시에 안 썼다’고 끝낼 수 있습니까">
           <Quoted
             text={
               <>
@@ -759,17 +888,18 @@ function ProblemSection() {
           />
 
           <p className="mt-8 text-base leading-relaxed text-ink-200">
-            논문·특허·전국대회 특상·국제대회 최우수상이{" "}
-            <strong className="text-ink-50">전부 같은 R&E 프로젝트 내용</strong>
-            입니다.
+            논문 파일을 냈느냐만 문제가 아닙니다. 그 논문과 같은 주제에서 나온{" "}
+            <strong className="text-ink-50">
+              R&E 보고서·특허·전국대회·국제대회 수상이 입시에 어떻게 쓰였는지
+            </strong>
+            가 핵심입니다.
           </p>
-          <p className="mt-3 text-base leading-relaxed text-ink-300">
-            ‘논문’을 입시 자료로 직접 제출하지 않았을 수 있습니다. 하지만 이
-            다양한 스펙을 자기소개서와 생활기록부에 과연 쓰지 않았을까요?
-            당시 서울대 이공계 특기자 전형에서{" "}
-            <strong className="text-ink-100">R&E 실적과 수상 이력은 핵심 스펙</strong>
-            이 될 수 있었습니다.
-          </p>
+
+          <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <SmallNote text="논문은 안 냈지만 R&E 보고서는 냈다." />
+            <SmallNote text="논문은 안 냈지만 수상 실적은 있었다." />
+            <SmallNote text="논문은 안 냈지만 생활기록부·자소서에는 연구 경험이 들어갔다." />
+          </div>
 
           <div className="mt-8 rounded-2xl border-l-4 border-magenta bg-ink-800/40 px-6 py-5">
             <p className="text-base leading-relaxed text-ink-100">
@@ -783,7 +913,7 @@ function ProblemSection() {
 
           <p className="mt-6 inline-flex items-center gap-2 rounded-full bg-magenta/15 px-4 py-2 text-sm font-bold text-magenta">
             <ShieldAlert className="h-4 w-4" />
-            권순기는 아직 이 문서를 공개하지 않았습니다.
+            권순기는 아직 이 문서를 도민 앞에 공개하지 않았습니다.
           </p>
         </ProblemBlock>
       </div>
@@ -844,13 +974,10 @@ function DocumentMock({
   );
 }
 
-function ResultCard({ label, detail }: { label: string; detail: string }) {
+function SmallNote({ text }: { text: string }) {
   return (
-    <div className="rounded-2xl border border-ink-700 bg-ink-800/40 p-5">
-      <p className="text-sm font-bold tracking-[0.06em] text-magenta uppercase">
-        {label}
-      </p>
-      <p className="mt-2 text-base text-ink-100">{detail}</p>
+    <div className="rounded-2xl border border-ink-700 bg-ink-800/40 p-4 text-sm leading-relaxed text-ink-200">
+      {text}
     </div>
   );
 }
@@ -905,7 +1032,6 @@ function StatementSection() {
   return (
     <section className="bg-ink-950">
       <div className="mx-auto max-w-screen-xl px-5 py-20 sm:px-6 sm:py-28 lg:px-8">
-        {/* 권순기 portrait + intro */}
         <div className="grid items-center gap-8 rounded-3xl border border-ink-700 bg-ink-900/60 p-7 sm:grid-cols-[auto_1fr] sm:gap-10 sm:p-10">
           <div className="relative mx-auto h-28 w-28 shrink-0 overflow-hidden rounded-full ring-4 ring-magenta/30 ring-offset-4 ring-offset-ink-900 sm:mx-0 sm:h-32 sm:w-32">
             <img
@@ -920,7 +1046,7 @@ function StatementSection() {
               Statements
             </p>
             <h3 className="mt-2 text-2xl leading-tight font-bold tracking-[-0.02em] text-ink-50 sm:text-3xl">
-              권순기는 토론회와 인터뷰에서 이렇게 말했습니다.
+              권순기는 토론회·인터뷰에서 이렇게 말했습니다.
               <br />
               하나씩 사실과 비교해 보겠습니다.
             </h3>
@@ -933,7 +1059,7 @@ function StatementSection() {
               key={i}
               className="overflow-hidden rounded-3xl border border-ink-700 bg-ink-900"
             >
-              <div className="grid md:grid-cols-2">
+              <div className="grid md:grid-cols-[5fr_7fr]">
                 <div className="border-b border-ink-700 p-7 sm:p-10 md:border-r md:border-b-0">
                   <p className="inline-flex items-center gap-2 text-xs font-bold tracking-[0.12em] text-ink-400 uppercase">
                     <Quote className="h-4 w-4" />
@@ -951,13 +1077,70 @@ function StatementSection() {
                     <ShieldAlert className="h-4 w-4" />
                     Fact · {String(i + 1).padStart(2, "0")}
                   </p>
-                  <p className="mt-4 text-base leading-relaxed text-ink-100 sm:text-lg">
-                    {s.truth}
-                  </p>
+                  <h4 className="mt-3 text-xl leading-tight font-bold tracking-[-0.02em] text-ink-50 sm:text-2xl">
+                    {s.factTitle}
+                  </h4>
+                  <div className="mt-4 space-y-3 text-base leading-relaxed text-ink-100">
+                    {s.factBody}
+                  </div>
                 </div>
               </div>
             </article>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ============================================================== */
+/* DEMAND — 시민의 요구 (v7 신설)                                   */
+/* ============================================================== */
+
+function DemandSection() {
+  return (
+    <section className="relative isolate overflow-hidden bg-ink-900">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-32 -right-32 h-96 w-96 rounded-full bg-magenta/20 blur-[120px]"
+      />
+      <div className="relative mx-auto max-w-screen-xl px-5 py-20 sm:px-6 sm:py-28 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-[5fr_7fr]">
+          <div>
+            <p className="inline-flex items-center gap-2 rounded-full border border-magenta/40 bg-magenta/10 px-4 py-1.5 text-xs font-bold tracking-[0.1em] text-magenta uppercase">
+              <FileCheck className="h-4 w-4" />
+              시민의 요구
+            </p>
+            <h2 className="mt-5 text-3xl leading-tight font-bold tracking-[-0.025em] text-ink-50 sm:text-5xl">
+              권순기 후보는
+              <br />
+              아래 자료를
+              <br />
+              <span className="text-magenta">공개하십시오.</span>
+            </h2>
+            <p className="mt-6 max-w-md text-base leading-relaxed text-ink-300">
+              없으면 없다고 하십시오. 있으면 공개하십시오.{" "}
+              <strong className="text-ink-50">
+                검증이 끝났다면 공개가 두려울 이유가 없습니다.
+              </strong>
+            </p>
+          </div>
+
+          <ol className="space-y-3">
+            {DEMANDS.map((d, i) => (
+              <li
+                key={d}
+                className="flex gap-5 rounded-2xl border border-ink-700 bg-ink-800/40 p-5 sm:p-6"
+              >
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-magenta text-sm font-black tracking-[-0.02em] text-ink-900 sm:h-10 sm:w-10 sm:text-base">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="text-base leading-relaxed text-ink-100 sm:text-lg">
+                  {d}
+                </p>
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </section>
@@ -978,12 +1161,11 @@ function RepetitionSection() {
               2005
             </p>
             <h3 className="mt-2 text-2xl font-bold tracking-[-0.02em] text-ink-50">
-              경남과학고 학생 김○○
+              경남과학고 학생들의 SCI 논문 사례
             </h3>
             <p className="mt-4 text-base leading-relaxed text-ink-300">
-              ‘국내 고교생 최초 SCI 논문’으로 대서특필. 그 논문에도 김윤희
-              (권순기의 아내)가 공저자였습니다. 김○○은 서울대 화학과에
-              입학했습니다.
+              당시 보도에는 권순기·김윤희가 학생들을 지도한 것으로 등장합니다.
+              일부 학생들은 이후 서울대·KAIST 등에 합격했습니다.
             </p>
             <blockquote className="mt-5 rounded-2xl border-l-4 border-magenta bg-ink-900/50 px-5 py-4 text-sm leading-relaxed text-ink-100">
               “경상대학교 과학교육과 교수인 김○○ 군의 아버지를 통해 권 교수의
@@ -1019,15 +1201,21 @@ function RepetitionSection() {
           </article>
         </div>
 
-        <p className="mt-12 max-w-3xl text-lg leading-relaxed text-ink-200">
-          권순기는 최근 토론회에서 “아들 전에도 고교생 SCI 논문의 선례가 있다”며
-          이 사례를 들었습니다.{" "}
-          <strong className="text-ink-50">
-            그 선례도 경상대 교수의 자녀였고, 지도는 권순기와 아내 김윤희가
-            했습니다.
-          </strong>{" "}
-          스스로 든 변호 근거가 오히려 같은 패턴의 반복임을 보여줍니다.
-        </p>
+        <div className="mt-12 rounded-3xl border border-ink-700 bg-ink-800/40 p-7 sm:p-10">
+          <p className="text-sm font-bold tracking-[0.1em] text-magenta uppercase">
+            그 말은 변명이 아니라 더 큰 질문을 만듭니다
+          </p>
+          <ul className="mt-5 space-y-2.5 text-base leading-relaxed text-ink-100 sm:text-lg">
+            <li>· 그 선례는 누구에게 열렸습니까.</li>
+            <li>· 그 연구실 문은 평범한 학생들에게도 같은 방식으로 열렸습니까.</li>
+            <li>· 그 과정의 기준과 기록은 남아 있습니까.</li>
+            <li>· 그리고 6년 뒤, 왜 비슷한 구조가 권순기의 아들에게서 다시 나타났습니까.</li>
+          </ul>
+          <p className="mt-7 text-lg leading-snug font-bold tracking-[-0.01em] text-ink-50 sm:text-xl">
+            반복되는 일은 우연이라고 부르기 어렵습니다. 특히 그 반복이 늘 힘
+            있는 사람들의 자녀에게 유리하게 작동할 때는 더 그렇습니다.
+          </p>
+        </div>
       </div>
     </section>
   );
@@ -1073,15 +1261,21 @@ function CtaSection() {
               Action — 릴레이 1인시위
             </p>
             <h2 className="mt-6 text-[clamp(32px,5.5vw,68px)] leading-[1.02] font-bold tracking-[-0.03em] text-ink-900">
-              권순기는 도민들의
+              권순기는 도민의
               <br />
               질문에 똑바로
               <br />
               대답해야 합니다.
             </h2>
-            <p className="mt-7 max-w-xl text-lg leading-relaxed text-ink-900/85 sm:text-xl">
-              혼자여도 됩니다. 5분이어도 됩니다. A4 한 장이면 충분합니다.
-              권순기 후보가 대답할 수 있도록, 지금 함께해 주세요.
+            <p className="mt-7 max-w-xl text-lg leading-relaxed text-ink-900/90 sm:text-xl">
+              우리가 요구하는 것은 간단합니다.{" "}
+              <strong>셀프 감사가 아니었다면, 문서를 공개하십시오.</strong>{" "}
+              자료를 내놓지 않는 침묵은 답변이 아닙니다. ‘문제없다’는 말만
+              반복하는 것은 검증이 아닙니다.
+            </p>
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-900/85">
+              혼자여도 됩니다. 5분이어도 됩니다. A4 한 장에 인쇄하고 규격에 맞게
+              잘라 쓰면 충분합니다.
             </p>
           </div>
 
@@ -1101,7 +1295,7 @@ function CtaSection() {
               onClick={() => {
                 if (typeof navigator !== "undefined" && navigator.share) {
                   void navigator.share({
-                    title: "부모찬스로 서울대 의혹, 권순기를 검증합니다",
+                    title: "엄마 연구실에서 만든 스펙, 권순기 후보는 답해야 합니다",
                     url: window.location.href,
                   });
                 } else if (typeof navigator !== "undefined" && navigator.clipboard) {
@@ -1154,22 +1348,46 @@ function ClosingSection() {
           Closing
         </p>
 
-        <p className="mt-6 text-lg leading-relaxed text-ink-200 sm:text-xl">
-          권순기는 경남 아이들의 교육을 맡겠다고 합니다.
+        <div className="mt-6 max-w-3xl space-y-4 text-lg leading-relaxed text-ink-200 sm:text-xl">
+          <p>
+            경남에는 오늘도{" "}
+            <strong className="text-ink-50">
+              새벽까지 책상 앞에 앉아 있는 아이들
+            </strong>
+            이 있습니다.
+          </p>
+          <p>
+            부모 연구실도, 국가과제도, 교수 인맥도 없이 자기 힘으로 버티는
+            아이들이 있습니다.
+          </p>
+        </div>
+
+        <p className="mt-10 max-w-3xl text-base leading-relaxed text-ink-300 sm:text-lg">
+          그 아이들에게 우리는 매일 말합니다. 공정하게 노력하면 된다고. 실력으로
+          평가받을 수 있다고. 부모가 누구인지보다 네가 무엇을 했는지가
+          중요하다고.
         </p>
 
-        <ul className="mt-10 grid gap-4 sm:grid-cols-3">
+        <p className="mt-10 max-w-3xl text-lg leading-snug font-bold tracking-[-0.01em] text-ink-100 sm:text-xl">
+          그렇다면 교육감 후보에게도 같은 말을 해야 합니다.
+        </p>
+
+        <ul className="mt-6 grid gap-4 sm:grid-cols-2">
           <ClosingPoint
             n="01"
-            text="새벽까지 혼자 독서실에서 공부하는 아이가 있습니다."
+            text="당신 아들의 연구기회는 어떻게 열렸습니까."
           />
           <ClosingPoint
             n="02"
-            text="부모가 국가 예산 9억을 받는 교수가 아닌, 평범한 집 아이들이 있습니다."
+            text="그 기회는 다른 아이들에게도 열려 있었습니까."
           />
           <ClosingPoint
             n="03"
-            text="스스로의 노력으로 끈질기게 성취하는 학생들이 있습니다."
+            text="서울대 입시에 그 성과는 어떻게 설명됐습니까."
+          />
+          <ClosingPoint
+            n="04"
+            text="검증이 끝났다면 왜 문서를 공개하지 않습니까."
           />
         </ul>
 
@@ -1180,7 +1398,7 @@ function ClosingSection() {
           <br />
           <span className="text-magenta">우리 아이도</span>
           <br />
-          <span className="text-magenta">받을 수 있을까요?</span>
+          <span className="text-magenta">받을 수 있습니까?</span>
         </h3>
       </div>
     </section>
@@ -1218,7 +1436,9 @@ function TipSection() {
               </h2>
               <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-300">
                 이 페이지에 담기지 않은 사실을 알고 계신다면 제보해 주십시오.
-                제보자의 신원은 철저히 보호됩니다.
+                <br />
+                제보자의 신원은 보호됩니다. 확인되지 않은 소문은 쓰지 않겠습니다.
+                문서·사진·당시 기록·관계자 증언처럼 검증 가능한 자료를 기다립니다.
               </p>
             </div>
             <div className="flex items-center justify-end border-t border-ink-700 bg-ink-900 p-7 sm:p-10 md:border-t-0 md:border-l">
