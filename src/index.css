@@ -1,0 +1,144 @@
+@import "tailwindcss";
+
+/* GounBatang — 명조체 (강조 영역 선택적 사용) */
+@font-face {
+  font-family: "GounBatang";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunBatang-Regular.woff")
+    format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "GounBatang";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2108@1.1/GowunBatang-Bold.woff")
+    format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  /* === 베이스 (다크) ====================================== */
+  --color-ink-50: #f6f5f8;
+  --color-ink-100: #ecebf1;
+  --color-ink-200: #c8c6d3;
+  --color-ink-300: #8e8b9e;
+  --color-ink-400: #5d5970;
+  --color-ink-500: #3a374a;
+  --color-ink-600: #26243a;
+  --color-ink-700: #1a1828;
+  --color-ink-800: #110f1c;
+  --color-ink-900: #0a0814;
+
+  /* === 메인 컬러 — 마젠타 ================================ */
+  --color-magenta: #ff2d92;
+  --color-magenta-50: #fff0f7;
+  --color-magenta-100: #ffd6e8;
+  --color-magenta-200: #ff9ec5;
+  --color-magenta-300: #ff66a3;
+  --color-magenta-400: #ff3d8f;
+  --color-magenta-500: #ff2d92;
+  --color-magenta-600: #d9176f;
+  --color-magenta-700: #a4124f;
+  --color-magenta-800: #6f0f37;
+  --color-magenta-900: #410b24;
+  --color-magenta-soft: #ffb3d6;
+
+  --font-sans:
+    "SUIT Variable", "SUIT", system-ui, -apple-system, "Apple SD Gothic Neo",
+    "Noto Sans KR", "Malgun Gothic", sans-serif;
+  --font-display:
+    "SUIT Variable", "SUIT", system-ui, "Apple SD Gothic Neo", sans-serif;
+  --font-serif:
+    "GounBatang", "Nanum Myeongjo", "Noto Serif KR", ui-serif, serif;
+
+  /* 한글 가독성 스케일 */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.9375rem;
+  --text-base: 1.0625rem;
+  --text-lg: 1.1875rem;
+  --text-xl: 1.375rem;
+  --text-2xl: 1.625rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+  --text-5xl: 3.125rem;
+  --text-6xl: 3.75rem;
+  --text-7xl: 4.5rem;
+  --text-8xl: 5.75rem;
+
+  --leading-snug: 1.45;
+  --leading-normal: 1.65;
+  --leading-relaxed: 1.8;
+  --leading-loose: 2;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    color-scheme: dark;
+  }
+
+  html,
+  body {
+    @apply bg-ink-900 text-ink-100 antialiased;
+    font-family: var(--font-sans);
+    font-feature-settings:
+      "ss03",
+      "ss04",
+      "kern" 1,
+      "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  body {
+    @apply min-h-dvh text-base leading-normal;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+  }
+
+  p {
+    line-height: 1.75;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.02em;
+    line-height: 1.18;
+  }
+
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-magenta;
+  }
+
+  ::selection {
+    background-color: var(--color-magenta);
+    color: var(--color-ink-900);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+}

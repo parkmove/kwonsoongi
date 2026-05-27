@@ -1,0 +1,17 @@
+{
+  "name": "권순기",
+  "short_name": "권순기",
+  "description": "권순기 공식 웹사이트",
+  "lang": "ko",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "background_color": "#0a0814",
+  "theme_color": "#0a0814",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
